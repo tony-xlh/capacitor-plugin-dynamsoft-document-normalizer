@@ -18,7 +18,7 @@ npx cap sync
 * [`initRuntimeSettingsFromString(...)`](#initruntimesettingsfromstring)
 * [`detect(...)`](#detect)
 * [`normalize(...)`](#normalize)
-* [`setEngineResourcePath(...)`](#setengineresourcepath)
+* [`setEngineResourcesPath(...)`](#setengineresourcespath)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -92,10 +92,10 @@ normalize(options: { source: string | DCEFrame; quad: Quadrilateral; }) => Promi
 --------------------
 
 
-### setEngineResourcePath(...)
+### setEngineResourcesPath(...)
 
 ```typescript
-setEngineResourcePath(options: { path: string; }) => Promise<void>
+setEngineResourcesPath(options: { path: string; }) => Promise<void>
 ```
 
 | Param         | Type                           |
@@ -133,22 +133,24 @@ setEngineResourcePath(options: { path: string; }) => Promise<void>
 
 #### DCEFrame
 
-| Prop             | Type                                              |
-| ---------------- | ------------------------------------------------- |
-| **`data`**       | <code><a href="#uint8array">Uint8Array</a></code> |
-| **`region`**     | <code><a href="#region">Region</a></code>         |
-| **`sx`**         | <code>number</code>                               |
-| **`sy`**         | <code>number</code>                               |
-| **`width`**      | <code>number</code>                               |
-| **`height`**     | <code>number</code>                               |
-| **`colorMode`**  | <code>string</code>                               |
-| **`timeSpent`**  | <code>number</code>                               |
-| **`timeStamp`**  | <code>number</code>                               |
-| **`isCropped`**  | <code>boolean</code>                              |
-| **`toCanvas`**   | <code>() =&gt; any</code>                         |
-| **`_sWidth`**    | <code>number</code>                               |
-| **`_sHeight`**   | <code>number</code>                               |
-| **`_bUseWebGL`** | <code>boolean</code>                              |
+| Prop              | Type                                              |
+| ----------------- | ------------------------------------------------- |
+| **`data`**        | <code><a href="#uint8array">Uint8Array</a></code> |
+| **`region`**      | <code><a href="#region">Region</a></code>         |
+| **`sx`**          | <code>number</code>                               |
+| **`sy`**          | <code>number</code>                               |
+| **`width`**       | <code>number</code>                               |
+| **`height`**      | <code>number</code>                               |
+| **`stride`**      | <code>number</code>                               |
+| **`colorMode`**   | <code>string</code>                               |
+| **`pixelFormat`** | <code>string</code>                               |
+| **`timeSpent`**   | <code>number</code>                               |
+| **`timeStamp`**   | <code>number</code>                               |
+| **`isCropped`**   | <code>boolean</code>                              |
+| **`toCanvas`**    | <code>() =&gt; any</code>                         |
+| **`_sWidth`**     | <code>number</code>                               |
+| **`_sHeight`**    | <code>number</code>                               |
+| **`_bUseWebGL`**  | <code>boolean</code>                              |
 
 
 #### Uint8Array
