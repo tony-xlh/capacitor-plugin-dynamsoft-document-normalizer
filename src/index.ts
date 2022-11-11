@@ -7,4 +7,5 @@ const DocumentNormalizer = registerPlugin<DocumentNormalizerPlugin>('DocumentNor
 });
 
 export * from './definitions';
+export * from './utils';
 export { DocumentNormalizer };
