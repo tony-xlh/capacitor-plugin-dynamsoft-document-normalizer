@@ -17,7 +17,7 @@ initialize();
 
 async function initialize(){
   startBtn.innerText = "Initializing...";
-  await DocumentNormalizer.initLicense({license:"DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="});
+  await DocumentNormalizer.initLicense({license:"DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAwMjI3NzYzLVRYbFhaV0pRY205cVgyUmtiZyIsIm9yZ2FuaXphdGlvbklEIjoiMTAwMjI3NzYzIiwiY2hlY2tDb2RlIjotMTY2NDUwOTcxMH0="});
   await DocumentNormalizer.initialize();
   await CameraPreview.initialize();
   if (onPlayedListener) {
@@ -27,6 +27,10 @@ async function initialize(){
     console.log(res);
     updateResolutionSelect(res.resolution);
     updateCameraSelect();
+    let width = res.resolution.split("x")[0];
+    let height = res.resolution.split("x")[1];
+    let svg = document.getElementById("overlay");
+    svg.setAttribute("viewBox","0 0 "+width+" "+height);
   });
   
   await CameraPreview.requestCameraPermission();
@@ -147,9 +151,35 @@ async function captureAndDetect(){
       frame = result.frame;
       results = await DocumentNormalizer.detect({source:frame});
     //}  
+    drawOverlay(results);
   } catch (error) {
     console.log(error);
   }
   scanning = false;
   console.log(results);
 }
+
+function drawOverlay(results){
+  let svg = document.getElementById("overlay");
+  svg.innerHTML = "";
+  results.forEach(result => {
+    let polygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    polygon.setAttribute("points",getPointsData(result));
+    polygon.setAttribute("stroke","green");
+    polygon.setAttribute("stroke-width","1");
+    polygon.setAttribute("fill","lime");
+    polygon.setAttribute("opacity","0.3");
+    svg.appendChild(polygon);
+  });
+}
+
+function getPointsData(result){
+  let location = result.location;
+  let pointsData = location.points[0].x + "," + location.points[0].y + " ";
+  pointsData = pointsData + location.points[1].x + "," + location.points[1].y +" ";
+  pointsData = pointsData + location.points[2].x + "," + location.points[2].y +" ";
+  pointsData = pointsData + location.points[3].x + "," + location.points[3].y;
+  return pointsData;
+}
+
+

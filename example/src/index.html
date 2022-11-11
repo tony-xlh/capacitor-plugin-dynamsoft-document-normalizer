@@ -38,6 +38,15 @@
     #result {
       max-width: 100%;
     }
+
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
@@ -50,6 +59,7 @@
     <select id="cameraSelect"></select>
     <select id="resolutionSelect"></select>
     <button id="toggleTorchButton" type="button">Toggle Torch</button>
+    <svg id="overlay" xmlns="http://www.w3.org/2000/svg"></svg>
   </div>
 </body>
 </html>
