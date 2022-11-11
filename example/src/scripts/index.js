@@ -1,6 +1,6 @@
 import '../styles/index.scss';
 import { CameraPreview } from "capacitor-plugin-dynamsoft-camera-preview";
-import { DocumentNormalizer } from "capacitor-plugin-dynamsoft-document-normliazer";
+import { DocumentNormalizer } from "capacitor-plugin-dynamsoft-document-normalizer";
 
 console.log('webpack starterkit');
 
