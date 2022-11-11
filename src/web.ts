@@ -7,16 +7,24 @@ import type { DocumentNormalizerPlugin } from './definitions';
 
 export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormalizerPlugin {
   private normalizer:DocumentNormalizer | undefined;
+  private engineResourcesPath: string = "https://cdn.jsdelivr.net/npm/dynamsoft-document-normalizer@1.0.10/dist/";
+  private license: string = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
   async initialize(): Promise<void> {
-    this.normalizer = await DocumentNormalizer.createInstance();
+    try {
+      DocumentNormalizer.license = this.license;
+      DocumentNormalizer.engineResourcePath = this.engineResourcesPath;
+      this.normalizer = await DocumentNormalizer.createInstance();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async initLicense(options: { license: string }): Promise<void> {
-    DocumentNormalizer.license = options.license;
+    this.license = options.license;
   }
 
-  async setEngineResourcePath(options: { path: string; }): Promise<void> {
-    DocumentNormalizer.engineResourcePath = options.path;
+  async setEngineResourcesPath(options: { path: string; }): Promise<void> {
+    this.engineResourcesPath = options.path;
   }
 
   async initRuntimeSettingsFromString(options: { template: string }): Promise<void> {

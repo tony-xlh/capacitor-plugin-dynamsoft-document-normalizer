@@ -8,5 +8,5 @@ export interface DocumentNormalizerPlugin {
   initRuntimeSettingsFromString(options: {template:string}): Promise<void>;
   detect(options:{source:string | DCEFrame}): Promise<DetectedQuadResult[]>;
   normalize(options:{source:string | DCEFrame, quad:Quadrilateral}): Promise<NormalizedImageResult>;
-  setEngineResourcePath(options:{path:string}): Promise<void>; 
+  setEngineResourcesPath(options:{path:string}): Promise<void>; 
 }
