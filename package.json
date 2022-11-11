@@ -74,5 +74,8 @@
     "android": {
       "src": "android"
     }
+  },
+  "dependencies": {
+    "dynamsoft-document-normalizer": "^1.0.10"
   }
 }
