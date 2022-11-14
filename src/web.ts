@@ -1,9 +1,9 @@
 import { WebPlugin } from '@capacitor/core';
 import { DCEFrame } from 'dynamsoft-camera-enhancer';
-import { DetectedQuadResult, DocumentNormalizer, NormalizedImageResult } from 'dynamsoft-document-normalizer';
+import { DetectedQuadResult, DocumentNormalizer } from 'dynamsoft-document-normalizer';
 import { Quadrilateral } from 'dynamsoft-document-normalizer/dist/types/interface/quadrilateral';
 
-import type { DocumentNormalizerPlugin } from './definitions';
+import type { DocumentNormalizerPlugin, NormalizedImageResult } from './definitions';
 
 export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormalizerPlugin {
   private normalizer:DocumentNormalizer | undefined;
@@ -45,7 +45,11 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
 
   async normalize(options: { source: string | DCEFrame, quad:Quadrilateral}): Promise<NormalizedImageResult> {
     if (this.normalizer) {
-      return await this.normalizer.normalize(options.source,{quad:options.quad});
+      let result = await this.normalizer.normalize(options.source,{quad:options.quad});
+      let normalizedResult:NormalizedImageResult = {
+        data:result.image.toCanvas().toDataURL()
+      }
+      return normalizedResult;
     } else {
       throw new Error("DDN not initialized.");
     }

@@ -1,5 +1,5 @@
 import { DCEFrame } from "dynamsoft-camera-enhancer";
-import { DetectedQuadResult, NormalizedImageResult } from "dynamsoft-document-normalizer";
+import { DetectedQuadResult } from "dynamsoft-document-normalizer";
 import { Quadrilateral } from "dynamsoft-document-normalizer/dist/types/interface/quadrilateral";
 
 export interface DocumentNormalizerPlugin {
@@ -9,4 +9,8 @@ export interface DocumentNormalizerPlugin {
   detect(options:{source:string | DCEFrame}): Promise<DetectedQuadResult[]>;
   normalize(options:{source:string | DCEFrame, quad:Quadrilateral}): Promise<NormalizedImageResult>;
   setEngineResourcesPath(options:{path:string}): Promise<void>; 
+}
+
+export interface NormalizedImageResult {
+  data: string;
 }
