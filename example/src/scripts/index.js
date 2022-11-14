@@ -5,7 +5,12 @@ import { DocumentNormalizer,intersectionOverUnion } from "capacitor-plugin-dynam
 
 console.log('webpack starterkit');
 
+let widthRatio = 1;
+let heightRatio = 1;
+let frameWidth;
+let frameHeight;
 let photoTaken = null;
+let detectionResult;
 let onPlayedListener;
 let interval;
 let previousResults = [];
@@ -30,6 +35,7 @@ async function initialize(){
   let browserLicense = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAwMjI3NzYzLVRYbFhaV0pRY205cVgyUmtiZyIsIm9yZ2FuaXphdGlvbklEIjoiMTAwMjI3NzYzIiwiY2hlY2tDb2RlIjotMTY2NDUwOTcxMH0=";
   if (Capacitor.isNativePlatform()) {
     await DocumentNormalizer.initLicense({license:mobileLicense});
+    document.getElementById("overlay").setAttribute("preserveAspectRatio","xMidYMid slice");
   }else{
     await DocumentNormalizer.initLicense({license:browserLicense});
   }
@@ -46,6 +52,8 @@ async function initialize(){
     let width = res.resolution.split("x")[0];
     let height = res.resolution.split("x")[1];
     let svg = document.getElementById("overlay");
+    frameWidth = width;
+    frameHeight = height;
     svg.setAttribute("viewBox","0 0 "+width+" "+height);
   });
   
@@ -142,7 +150,7 @@ function startScanning(){
   photoTaken = null;
   previousResults = [];
   scanning = false;
-  interval = setInterval(captureAndDetect,100);
+  interval = setInterval(captureAndDetect,400);
 }
 
 function stopScanning(){
@@ -235,15 +243,42 @@ function displayPhotoAndShowConfirmation(){
     let svgElement = document.getElementById("overlay");
     let svgImage = document.createElementNS("http://www.w3.org/2000/svg", "image");
     svgImage.setAttribute("href",img.src);
+    widthRatio = frameWidth/img.naturalWidth;
+    heightRatio = frameHeight/img.naturalHeight;
+    svgElement.setAttribute("viewBox","0 0 "+img.naturalWidth+" "+img.naturalHeight);
+    svgElement.innerHTML = "";
+    detectionResult = scaleDetectionResult(previousResults[0]);
+    drawOverlay([detectionResult]);
     let polygons = svgElement.getElementsByTagName("polygon");
-    if (polygons.length>0) {
-      svgElement.insertBefore(svgImage,polygons[0]);
-    }else{
-      svgElement.appendChild(svgImage);
-    }
+    svgElement.insertBefore(svgImage,polygons[0]);
     document.getElementById("confirmation").style.display = "";
   };
   img.src = photoTaken;
+}
+
+function scaleDetectionResult(result) {
+  let points = [{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}];
+  for (let index = 0; index < result.location.points.length; index++) {
+    const point = result.location.points[index];
+    if (point) {
+      let x = point.x / widthRatio;
+      let y = point.y / heightRatio;
+      let newPoint = {
+        coordinate: [x,y],
+        x: x,
+        y: y
+      };
+      points[index] = newPoint;
+    }
+  }
+  let quad = {
+    points: points
+  };
+  let newQuadResult = {
+    confidenceAsDocumentBoundary:result.confidenceAsDocumentBoundary,
+    location: quad
+  };
+  return newQuadResult;
 }
 
 function steady(){
@@ -280,9 +315,9 @@ function retake(){
   startScanning();
 }
 
-async function normalizeImage(){
+async function normalizeImage() {
   console.log("normalize image");
-  let normalizationResult = (await DocumentNormalizer.normalize({source:photoTaken,quad:previousResults[0].location})).result;
+  let normalizationResult = (await DocumentNormalizer.normalize({source:photoTaken,quad:detectionResult.location})).result;
   document.getElementById("normalizedImage").src = normalizationResult.data;
 }
 
