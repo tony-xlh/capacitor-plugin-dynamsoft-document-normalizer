@@ -224,6 +224,9 @@ async function checkIfSteady(results) {
 
 async function takePhoto() {
   photoTaken = (await CameraPreview.takePhoto()).base64;
+  if (!photoTaken.startsWith("data")) {
+    photoTaken = "data:image/jpeg;base64," + photoTaken;
+  }
 }
 
 function displayPhotoAndShowConfirmation(){
