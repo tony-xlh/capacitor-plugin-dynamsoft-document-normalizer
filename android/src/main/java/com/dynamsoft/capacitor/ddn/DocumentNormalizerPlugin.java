@@ -41,9 +41,9 @@ public class DocumentNormalizerPlugin extends Plugin {
             public void licenseVerificationCallback(boolean isSuccess, CoreException error) {
                 if(!isSuccess){
                     error.printStackTrace();
-                    call.resolve();
-                }else{
                     call.reject(error.getMessage());
+                }else{
+                    call.resolve();
                 }
             }
         });
@@ -73,8 +73,10 @@ public class DocumentNormalizerPlugin extends Plugin {
                 JSObject response = new JSObject();
                 JSArray detectionResults = new JSArray();
                 DetectedQuadResult[] results = ddn.detectQuad(Utils.base642Bitmap(source));
-                for (DetectedQuadResult result:results) {
-                    detectionResults.put(Utils.getMapFromDetectedQuadResult(result));
+                if (results != null) {
+                    for (DetectedQuadResult result:results) {
+                        detectionResults.put(Utils.getMapFromDetectedQuadResult(result));
+                    }
                 }
                 response.put("results",detectionResults);
                 call.resolve(response);
