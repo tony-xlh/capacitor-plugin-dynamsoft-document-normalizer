@@ -1,4 +1,5 @@
 import '../styles/index.scss';
+import { Capacitor } from '@capacitor/core';
 import { CameraPreview } from "capacitor-plugin-dynamsoft-camera-preview";
 import { DocumentNormalizer,intersectionOverUnion } from "capacitor-plugin-dynamsoft-document-normalizer";
 
@@ -25,7 +26,14 @@ initialize();
 
 async function initialize(){
   startBtn.innerText = "Initializing...";
-  await DocumentNormalizer.initLicense({license:"DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAwMjI3NzYzLVRYbFhaV0pRY205cVgyUmtiZyIsIm9yZ2FuaXphdGlvbklEIjoiMTAwMjI3NzYzIiwiY2hlY2tDb2RlIjotMTY2NDUwOTcxMH0="});
+  let mobileLicense = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAwMjI3NzYzLVRYbE5iMkpwYkdWUWNtOXFYMlJrYmciLCJvcmdhbml6YXRpb25JRCI6IjEwMDIyNzc2MyIsImNoZWNrQ29kZSI6MTM0ODY2MDUyMn0=";
+  let browserLicense = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAwMjI3NzYzLVRYbFhaV0pRY205cVgyUmtiZyIsIm9yZ2FuaXphdGlvbklEIjoiMTAwMjI3NzYzIiwiY2hlY2tDb2RlIjotMTY2NDUwOTcxMH0=";
+  if (Capacitor.isNativePlatform()) {
+    await DocumentNormalizer.initLicense({license:mobileLicense});
+  }else{
+    await DocumentNormalizer.initLicense({license:browserLicense});
+  }
+  
   await DocumentNormalizer.initialize();
   await CameraPreview.initialize();
   if (onPlayedListener) {
