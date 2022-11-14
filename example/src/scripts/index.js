@@ -18,6 +18,8 @@ startBtn.addEventListener("click",startCamera);
 okayBtn.addEventListener("click",okay);
 retakeBtn.addEventListener("click",retake);
 toggleTorchBtn.addEventListener("click",toggleTorch);
+document.getElementById("colorModeSelect").selectedIndex = 2;
+document.getElementById("colorModeSelect").addEventListener("change",onColorModeChange);
 
 initialize();
 
@@ -260,7 +262,7 @@ async function okay(){
   svgElement.innerHTML = "";
   await CameraPreview.stopCamera();
   toggleControlsDisplay(false);
-  normalizeImage(previousResults[0],photoTaken);
+  normalizeImage();
 }
 
 function retake(){
@@ -270,9 +272,24 @@ function retake(){
   startScanning();
 }
 
-async function normalizeImage(detectionResult, photo){
-  let normalizationResult = await DocumentNormalizer.normalize({source:photo,quad:detectionResult.location});
+async function normalizeImage(){
+  console.log("normalize image");
+  let normalizationResult = await DocumentNormalizer.normalize({source:photoTaken,quad:previousResults[0].location});
   console.log(normalizationResult);
   document.getElementById("normalizedImage").src = normalizationResult.data;
+}
+
+async function onColorModeChange() {
+  let selectedIndex = document.getElementById("colorModeSelect").selectedIndex;
+  console.log(selectedIndex);
+  if (selectedIndex === 0) {
+    await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_BINARY\"}]}"});
+  }else if (selectedIndex === 1) {
+    await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_GRAYSCALE\"}]}"});
+  }else {
+    await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_COLOUR\"}]}"});
+  }
+  console.log("update settings done");
+  normalizeImage();
 }
 
