@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Document Scanner</string>
+    <string name="title_activity_main">Document Scanner</string>
+    <string name="package_name">com.dynamsoft.documentscanner</string>
+    <string name="custom_url_scheme">com.dynamsoft.documentscanner</string>
+</resources>
