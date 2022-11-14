@@ -35,21 +35,22 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
     }
   }
 
-  async detect(options: { source: string | DCEFrame }): Promise<DetectedQuadResult[]> {
+  async detect(options: { source: string | DCEFrame }): Promise<{results:DetectedQuadResult[]}> {
     if (this.normalizer) {
-      return await this.normalizer.detectQuad(options.source);
+      let detectedQuads = await this.normalizer.detectQuad(options.source);
+      return {results:detectedQuads};
     } else {
       throw new Error("DDN not initialized.");
     }
   }
 
-  async normalize(options: { source: string | DCEFrame, quad:Quadrilateral}): Promise<NormalizedImageResult> {
+  async normalize(options: { source: string | DCEFrame, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}> {
     if (this.normalizer) {
       let result = await this.normalizer.normalize(options.source,{quad:options.quad});
       let normalizedResult:NormalizedImageResult = {
         data:result.image.toCanvas().toDataURL()
       }
-      return normalizedResult;
+      return {result:normalizedResult};
     } else {
       throw new Error("DDN not initialized.");
     }

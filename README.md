@@ -65,14 +65,14 @@ initRuntimeSettingsFromString(options: { template: string; }) => Promise<void>
 ### detect(...)
 
 ```typescript
-detect(options: { source: string | DCEFrame; }) => Promise<DetectedQuadResult[]>
+detect(options: { source: string | DCEFrame; }) => Promise<{ results: DetectedQuadResult[]; }>
 ```
 
 | Param         | Type                                                                 |
 | ------------- | -------------------------------------------------------------------- |
 | **`options`** | <code>{ source: string \| <a href="#dceframe">DCEFrame</a>; }</code> |
 
-**Returns:** <code>Promise&lt;DetectedQuadResult[]&gt;</code>
+**Returns:** <code>Promise&lt;{ results: DetectedQuadResult[]; }&gt;</code>
 
 --------------------
 
@@ -80,14 +80,14 @@ detect(options: { source: string | DCEFrame; }) => Promise<DetectedQuadResult[]>
 ### normalize(...)
 
 ```typescript
-normalize(options: { source: string | DCEFrame; quad: Quadrilateral; }) => Promise<NormalizedImageResult>
+normalize(options: { source: string | DCEFrame; quad: Quadrilateral; }) => Promise<{ result: NormalizedImageResult; }>
 ```
 
 | Param         | Type                                                                                                                   |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ source: string \| <a href="#dceframe">DCEFrame</a>; quad: <a href="#quadrilateral">Quadrilateral</a>; }</code> |
 
-**Returns:** <code>Promise&lt;<a href="#normalizedimageresult">NormalizedImageResult</a>&gt;</code>
+**Returns:** <code>Promise&lt;{ result: <a href="#normalizedimageresult">NormalizedImageResult</a>; }&gt;</code>
 
 --------------------
 
