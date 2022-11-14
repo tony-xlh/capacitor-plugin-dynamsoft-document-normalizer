@@ -158,19 +158,17 @@ async function captureAndDetect(){
     return;
   }
   let results = [];
-  let frame;
-  //let base64;
   scanning = true;
   try {
-    //if (Capacitor.isNativePlatform()) {
-    //  let result = await CameraPreview.takeSnapshot({quality:85});
-    //  base64 = result.base64;
-    //  results = await DocumentNormalizer.detect({source:base64});
-    //} else {
+    if (Capacitor.isNativePlatform()) {
+      let result = await CameraPreview.takeSnapshot({quality:85});
+      let base64 = result.base64;
+      results = await DocumentNormalizer.detect({source:base64});
+    } else {
       let result = await CameraPreview.takeSnapshot2();
-      frame = result.frame;
+      let frame = result.frame;
       results = await DocumentNormalizer.detect({source:frame});
-    //}
+    }
     drawOverlay(results);
     await checkIfSteady(results);
   } catch (error) {
@@ -226,7 +224,6 @@ async function checkIfSteady(results) {
 
 async function takePhoto() {
   photoTaken = (await CameraPreview.takePhoto()).base64;
-  console.log(photoTaken);
 }
 
 function displayPhotoAndShowConfirmation(){
@@ -283,7 +280,6 @@ function retake(){
 async function normalizeImage(){
   console.log("normalize image");
   let normalizationResult = await DocumentNormalizer.normalize({source:photoTaken,quad:previousResults[0].location});
-  console.log(normalizationResult);
   document.getElementById("normalizedImage").src = normalizationResult.data;
 }
 
