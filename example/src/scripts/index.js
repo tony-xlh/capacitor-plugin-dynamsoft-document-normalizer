@@ -11,8 +11,12 @@ let previousResults = [];
 let scanning = false;
 let torchStatus = false;
 let startBtn = document.getElementById("startBtn");
+let okayBtn = document.getElementById("okayBtn");
+let retakeBtn = document.getElementById("retakeBtn");
 let toggleTorchBtn = document.getElementById("toggleTorchButton");
 startBtn.addEventListener("click",startCamera);
+okayBtn.addEventListener("click",okay);
+retakeBtn.addEventListener("click",retake);
 toggleTorchBtn.addEventListener("click",toggleTorch);
 
 initialize();
@@ -208,43 +212,54 @@ async function checkIfSteady(results) {
       previousResults.push(result);
     }
   }
-
-  async function takePhoto() {
-    photoTaken = (await CameraPreview.takePhoto()).base64;
-    console.log(photoTaken);
-  }
-
-  function displayPhotoAndShowConfirmation(){
-    let img = new Image();
-    img.onload = function(){
-      let svgElement = document.getElementById("overlay");
-      let svgImage = document.createElementNS("http://www.w3.org/2000/svg", "image");
-      svgImage.setAttribute("href",img.src);
-      let polygons = svgElement.getElementsByTagName("polygon");
-      if (polygons.length>0) {
-        svgElement.insertBefore(svgImage,polygons[0]);
-      }else{
-        svgElement.appendChild(svgImage);
-      }
-    };
-    img.src = photoTaken;
-  }
-
-  function steady(){
-    if (previousResults[0] && previousResults[1] && previousResults[2]) {
-      let iou1 = intersectionOverUnion(previousResults[0].location.points,previousResults[1].location.points);
-      let iou2 = intersectionOverUnion(previousResults[1].location.points,previousResults[2].location.points);
-      let iou3 = intersectionOverUnion(previousResults[2].location.points,previousResults[1].location.points);
-      console.log(iou1);
-      console.log(iou2);
-      console.log(iou3);
-      if (iou1>0.9 && iou2>0.9 && iou3>0.9) {
-        return true;
-      }else{
-        return false;
-      }
-    }
-    return false;
-  }
 }
 
+async function takePhoto() {
+  photoTaken = (await CameraPreview.takePhoto()).base64;
+  console.log(photoTaken);
+}
+
+function displayPhotoAndShowConfirmation(){
+  let img = new Image();
+  img.onload = function(){
+    let svgElement = document.getElementById("overlay");
+    let svgImage = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    svgImage.setAttribute("href",img.src);
+    let polygons = svgElement.getElementsByTagName("polygon");
+    if (polygons.length>0) {
+      svgElement.insertBefore(svgImage,polygons[0]);
+    }else{
+      svgElement.appendChild(svgImage);
+    }
+  };
+  img.src = photoTaken;
+}
+
+function steady(){
+  if (previousResults[0] && previousResults[1] && previousResults[2]) {
+    let iou1 = intersectionOverUnion(previousResults[0].location.points,previousResults[1].location.points);
+    let iou2 = intersectionOverUnion(previousResults[1].location.points,previousResults[2].location.points);
+    let iou3 = intersectionOverUnion(previousResults[2].location.points,previousResults[1].location.points);
+    console.log(iou1);
+    console.log(iou2);
+    console.log(iou3);
+    if (iou1>0.9 && iou2>0.9 && iou3>0.9) {
+      return true;
+    }else{
+      return false;
+    }
+  }
+  return false;
+}
+
+async function okay(){
+  let svgElement = document.getElementById("overlay");
+  svgElement.innerHTML = "";
+  await CameraPreview.stopCamera();
+}
+
+function retake(){
+  let svgElement = document.getElementById("overlay");
+  svgElement.innerHTML = "";
+  startScanning();
+}
