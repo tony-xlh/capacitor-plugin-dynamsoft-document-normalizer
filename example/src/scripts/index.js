@@ -194,9 +194,10 @@ async function checkIfSteady(results) {
     let result = results[0];
     if (previousResults.length >= 3) {
       if (steady() == true) {
+        console.log("steady");
         stopScanning();
         await takePhoto();
-        console.log("steady");
+        dispalyPhotoAndShowConfirmationModal();
       }else{
         console.log("shift and add result");
         previousResults.shift();
@@ -209,8 +210,24 @@ async function checkIfSteady(results) {
   }
 
   async function takePhoto() {
-    photoTaken = await CameraPreview.takePhoto();
+    photoTaken = (await CameraPreview.takePhoto()).base64;
     console.log(photoTaken);
+  }
+
+  function dispalyPhotoAndShowConfirmationModal(){
+    let img = new Image();
+    img.onload = function(){
+      let svgElement = document.getElementById("overlay");
+      let svgImage = document.createElementNS("http://www.w3.org/2000/svg", "image");
+      svgImage.setAttribute("href",img.src);
+      let polygons = svgElement.getElementsByTagName("polygon");
+      if (polygons.length>0) {
+        svgElement.insertBefore(svgImage,polygons[0]);
+      }else{
+        svgElement.appendChild(svgImage);
+      }
+    };
+    img.src = photoTaken;
   }
 
   function steady(){
