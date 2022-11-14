@@ -163,11 +163,11 @@ async function captureAndDetect(){
     if (Capacitor.isNativePlatform()) {
       let result = await CameraPreview.takeSnapshot({quality:85});
       let base64 = result.base64;
-      results = await DocumentNormalizer.detect({source:base64});
+      results = (await DocumentNormalizer.detect({source:base64})).results;
     } else {
       let result = await CameraPreview.takeSnapshot2();
       let frame = result.frame;
-      results = await DocumentNormalizer.detect({source:frame});
+      results = (await DocumentNormalizer.detect({source:frame})).results;
     }
     drawOverlay(results);
     await checkIfSteady(results);
@@ -279,7 +279,7 @@ function retake(){
 
 async function normalizeImage(){
   console.log("normalize image");
-  let normalizationResult = await DocumentNormalizer.normalize({source:photoTaken,quad:previousResults[0].location});
+  let normalizationResult = (await DocumentNormalizer.normalize({source:photoTaken,quad:previousResults[0].location})).result;
   document.getElementById("normalizedImage").src = normalizationResult.data;
 }
 
