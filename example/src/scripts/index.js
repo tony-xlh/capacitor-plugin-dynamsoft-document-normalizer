@@ -273,5 +273,6 @@ function retake(){
 async function normalizeImage(detectionResult, photo){
   let normalizationResult = await DocumentNormalizer.normalize({source:photo,quad:detectionResult.location});
   console.log(normalizationResult);
+  document.getElementById("normalizedImage").src = normalizationResult.data;
 }
 
