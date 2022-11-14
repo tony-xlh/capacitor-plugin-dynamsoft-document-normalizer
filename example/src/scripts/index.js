@@ -1,11 +1,13 @@
 import '../styles/index.scss';
 import { CameraPreview } from "capacitor-plugin-dynamsoft-camera-preview";
-import { DocumentNormalizer } from "capacitor-plugin-dynamsoft-document-normalizer";
+import { DocumentNormalizer,intersectionOverUnion } from "capacitor-plugin-dynamsoft-document-normalizer";
 
 console.log('webpack starterkit');
 
+let photoTaken = null;
 let onPlayedListener;
-//let interval;
+let interval;
+let previousResults = [];
 let scanning = false;
 let torchStatus = false;
 let startBtn = document.getElementById("startBtn");
@@ -123,18 +125,22 @@ async function toggleTorch(){
 }
 
 function startScanning(){
+  photoTaken = null;
   scanning = false;
-  //interval = setInterval(captureAndDetect,100);
-  setInterval(captureAndDetect,100);
+  interval = setInterval(captureAndDetect,100);
+  //setInterval(captureAndDetect,100);
 }
 
-//function stopScanning(){
-//  clearInterval(interval);
-//  scanning = false;
-//}
+function stopScanning(){
+  clearInterval(interval);
+  scanning = false;
+}
 
 async function captureAndDetect(){
   if (scanning === true) {
+    return;
+  }
+  if (photoTaken) {
     return;
   }
   let results = [];
@@ -150,8 +156,9 @@ async function captureAndDetect(){
       let result = await CameraPreview.takeSnapshot2();
       frame = result.frame;
       results = await DocumentNormalizer.detect({source:frame});
-    //}  
+    //}
     drawOverlay(results);
+    await checkIfSteady(results);
   } catch (error) {
     console.log(error);
   }
@@ -182,4 +189,45 @@ function getPointsData(result){
   return pointsData;
 }
 
+async function checkIfSteady(results) {
+  if (results.length>0) {
+    let result = results[0];
+    if (previousResults.length >= 3) {
+      if (steady() == true) {
+        stopScanning();
+        await takePhoto();
+        console.log("steady");
+      }else{
+        console.log("shift and add result");
+        previousResults.shift();
+        previousResults.push(result);
+      }
+    }else{
+      console.log("add result");
+      previousResults.push(result);
+    }
+  }
+
+  async function takePhoto() {
+    photoTaken = await CameraPreview.takePhoto();
+    console.log(photoTaken);
+  }
+
+  function steady(){
+    if (previousResults[0] && previousResults[1] && previousResults[2]) {
+      let iou1 = intersectionOverUnion(previousResults[0].location.points,previousResults[1].location.points);
+      let iou2 = intersectionOverUnion(previousResults[1].location.points,previousResults[2].location.points);
+      let iou3 = intersectionOverUnion(previousResults[2].location.points,previousResults[1].location.points);
+      console.log(iou1);
+      console.log(iou2);
+      console.log(iou3);
+      if (iou1>0.9 && iou2>0.9 && iou3>0.9) {
+        return true;
+      }else{
+        return false;
+      }
+    }
+    return false;
+  }
+}
 
