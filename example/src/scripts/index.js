@@ -130,9 +130,9 @@ async function toggleTorch(){
 
 function startScanning(){
   photoTaken = null;
+  previousResults = [];
   scanning = false;
   interval = setInterval(captureAndDetect,100);
-  //setInterval(captureAndDetect,100);
 }
 
 function stopScanning(){
@@ -231,6 +231,7 @@ function displayPhotoAndShowConfirmation(){
     }else{
       svgElement.appendChild(svgImage);
     }
+    document.getElementById("confirmation").style.display = "";
   };
   img.src = photoTaken;
 }
@@ -253,12 +254,15 @@ function steady(){
 }
 
 async function okay(){
+  document.getElementById("confirmation").style.display = "none";
   let svgElement = document.getElementById("overlay");
   svgElement.innerHTML = "";
   await CameraPreview.stopCamera();
+  toggleControlsDisplay(false);
 }
 
 function retake(){
+  document.getElementById("confirmation").style.display = "none";
   let svgElement = document.getElementById("overlay");
   svgElement.innerHTML = "";
   startScanning();
