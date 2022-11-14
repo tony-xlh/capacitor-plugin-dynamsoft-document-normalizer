@@ -255,10 +255,12 @@ function steady(){
 
 async function okay(){
   document.getElementById("confirmation").style.display = "none";
+  document.getElementById("normalizationResult").style.display = "";
   let svgElement = document.getElementById("overlay");
   svgElement.innerHTML = "";
   await CameraPreview.stopCamera();
   toggleControlsDisplay(false);
+  normalizeImage(previousResults[0],photoTaken);
 }
 
 function retake(){
@@ -267,3 +269,9 @@ function retake(){
   svgElement.innerHTML = "";
   startScanning();
 }
+
+async function normalizeImage(detectionResult, photo){
+  let normalizationResult = await DocumentNormalizer.normalize({source:photo,quad:detectionResult.location});
+  console.log(normalizationResult);
+}
+
