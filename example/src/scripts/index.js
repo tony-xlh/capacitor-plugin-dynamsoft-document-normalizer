@@ -197,7 +197,7 @@ async function checkIfSteady(results) {
         console.log("steady");
         stopScanning();
         await takePhoto();
-        dispalyPhotoAndShowConfirmationModal();
+        dispalyPhotoAndShowConfirmation();
       }else{
         console.log("shift and add result");
         previousResults.shift();
@@ -214,7 +214,7 @@ async function checkIfSteady(results) {
     console.log(photoTaken);
   }
 
-  function dispalyPhotoAndShowConfirmationModal(){
+  function dispalyPhotoAndShowConfirmation(){
     let img = new Image();
     img.onload = function(){
       let svgElement = document.getElementById("overlay");
