@@ -62,6 +62,7 @@
     "@capacitor/android": "^4.4.0",
     "@capacitor/cli": "^4.4.0",
     "@capacitor/core": "^4.4.0",
+    "@capacitor/ios": "^4.4.0",
     "capacitor-plugin-dynamsoft-camera-preview": "^1.1.0",
     "capacitor-plugin-dynamsoft-document-normalizer": "file:..",
     "cordova-plugin-screen-orientation": "^3.0.2",
