@@ -37,6 +37,8 @@ async function initialize(){
   }
   
   await DocumentNormalizer.initialize();
+  //set initial color mode to color
+  await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_COLOUR\"}]}"});
   await CameraPreview.initialize();
   if (onPlayedListener) {
     await onPlayedListener.remove();
