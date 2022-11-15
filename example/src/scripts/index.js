@@ -7,6 +7,8 @@ import { DocumentNormalizer,intersectionOverUnion } from "capacitor-plugin-dynam
 
 console.log('webpack starterkit');
 
+let frameWidth;
+let frameHeight;
 let photoTaken = null;
 let detectionResult;
 let onPlayedListener;
@@ -42,6 +44,13 @@ async function initialize(){
   //set initial color mode to color
   await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_COLOUR\"}]}"});
   await CameraPreview.initialize();
+  
+  if (Capacitor.isNativePlatform()) {
+    ScreenOrientation.onChange().subscribe(() => {
+      updateViewBox(frameWidth,frameHeight);
+    })
+  }
+
   if (onPlayedListener) {
     await onPlayedListener.remove();
   }
@@ -51,18 +60,9 @@ async function initialize(){
     updateCameraSelect();
     let width = res.resolution.split("x")[0];
     let height = res.resolution.split("x")[1];
-    
-    if (Capacitor.isNativePlatform()) {
-      console.log(ScreenOrientation.type);
-      if (ScreenOrientation.type.toLowerCase().indexOf("portrait") != -1) {
-        console.log("switch width and height");
-        let temp = width;
-        width = height;
-        height = temp;
-      }
-    }
-    let svg = document.getElementById("overlay");
-    svg.setAttribute("viewBox","0 0 "+width+" "+height);
+    frameWidth = width;
+    frameHeight = height;
+    updateViewBox(width,height);
   });
   
   await CameraPreview.requestCameraPermission();
@@ -70,6 +70,20 @@ async function initialize(){
   loadResolutions();
   startBtn.innerText = "Start Scanning";
   startBtn.disabled = "";
+}
+
+function updateViewBox(width, height){
+  if (Capacitor.isNativePlatform()) {
+    console.log(ScreenOrientation.type);
+    if (ScreenOrientation.type.toLowerCase().indexOf("portrait") != -1) {
+      console.log("switch width and height");
+      let temp = width;
+      width = height;
+      height = temp;
+    }
+  }
+  let svg = document.getElementById("overlay");
+  svg.setAttribute("viewBox","0 0 "+width+" "+height);
 }
 
 async function startCamera(){
