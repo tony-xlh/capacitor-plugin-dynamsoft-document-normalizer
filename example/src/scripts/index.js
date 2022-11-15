@@ -1,8 +1,10 @@
 import '../styles/index.scss';
+import { ScreenOrientation } from "@awesome-cordova-plugins/screen-orientation";
 import { Capacitor } from '@capacitor/core';
 import { CameraPreview } from "capacitor-plugin-dynamsoft-camera-preview";
 import { DocumentNormalizer,intersectionOverUnion } from "capacitor-plugin-dynamsoft-document-normalizer";
-import { ScreenOrientation } from "@awesome-cordova-plugins/screen-orientation"
+
+
 console.log('webpack starterkit');
 
 let photoTaken = null;
@@ -51,7 +53,7 @@ async function initialize(){
     let height = res.resolution.split("x")[1];
     
     if (Capacitor.isNativePlatform()) {
-      console.log(ScreenOrientation.type)
+      console.log(ScreenOrientation.type);
       if (ScreenOrientation.type.toLowerCase().indexOf("portrait") != -1) {
         console.log("switch width and height");
         let temp = width;
@@ -79,9 +81,11 @@ async function startCamera(){
 function toggleControlsDisplay(show){
   if (show) {
     document.getElementsByClassName("home")[0].style.display = "none";
+    document.getElementById("normalizationResult").style.display = "none";
     document.getElementsByClassName("controls")[0].style.display = "";
   }else {
     document.getElementsByClassName("home")[0].style.display = "";
+    document.getElementById("normalizationResult").style.display = "";
     document.getElementsByClassName("controls")[0].style.display = "none";
   }
 }
