@@ -165,8 +165,9 @@ async function captureAndDetect(){
   let frame;
   try {
     if (Capacitor.isNativePlatform()) {
-      let result = await CameraPreview.takeSnapshot({quality:85});
+      let result = await CameraPreview.takeSnapshot({quality:100});
       base64 = result.base64;
+      console.log(base64);
       results = (await DocumentNormalizer.detect({source:base64})).results;
     } else {
       let result = await CameraPreview.takeSnapshot2();
@@ -180,6 +181,9 @@ async function captureAndDetect(){
         base64 = frame.toCanvas().toDataURL("image/jpeg");
       }
       photoTaken = base64;
+      if (!photoTaken.startsWith("data")) {
+        photoTaken = "data:image/jpeg;base64," + photoTaken;
+      }
       stopScanning();
       displayPhotoAndShowConfirmation();
     }
