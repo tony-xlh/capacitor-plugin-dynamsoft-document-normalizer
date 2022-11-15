@@ -2,7 +2,7 @@ import '../styles/index.scss';
 import { Capacitor } from '@capacitor/core';
 import { CameraPreview } from "capacitor-plugin-dynamsoft-camera-preview";
 import { DocumentNormalizer,intersectionOverUnion } from "capacitor-plugin-dynamsoft-document-normalizer";
-
+import { ScreenOrientation } from "@awesome-cordova-plugins/screen-orientation"
 console.log('webpack starterkit');
 
 let photoTaken = null;
@@ -49,6 +49,15 @@ async function initialize(){
     updateCameraSelect();
     let width = res.resolution.split("x")[0];
     let height = res.resolution.split("x")[1];
+    
+    if (Capacitor.isNativePlatform()) {
+      console.log(ScreenOrientation.type)
+      if (ScreenOrientation.type === ScreenOrientation.ORIENTATIONS.PORTRAIT ) {
+        let temp = width;
+        width = height;
+        height = temp;
+      }
+    }
     let svg = document.getElementById("overlay");
     svg.setAttribute("viewBox","0 0 "+width+" "+height);
   });
@@ -169,7 +178,6 @@ async function captureAndDetect(){
     if (Capacitor.isNativePlatform()) {
       let result = await CameraPreview.takeSnapshot({quality:100});
       base64 = result.base64;
-      console.log(base64);
       results = (await DocumentNormalizer.detect({source:base64})).results;
     } else {
       let result = await CameraPreview.takeSnapshot2();
