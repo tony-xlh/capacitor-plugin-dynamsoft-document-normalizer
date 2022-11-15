@@ -48,7 +48,7 @@ async function initialize(){
   if (Capacitor.isNativePlatform()) {
     ScreenOrientation.onChange().subscribe(() => {
       updateViewBox(frameWidth,frameHeight);
-    })
+    });
   }
 
   if (onPlayedListener) {
@@ -174,7 +174,7 @@ function startScanning(){
   photoTaken = null;
   previousResults = [];
   scanning = false;
-  interval = setInterval(captureAndDetect,400);
+  interval = setInterval(captureAndDetect,100);
 }
 
 function stopScanning(){
