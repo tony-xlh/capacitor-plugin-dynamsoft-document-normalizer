@@ -1,6 +1,8 @@
 package com.dynamsoft.capacitor.ddn;
 
+import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.util.Log;
 
 import com.dynamsoft.core.CoreException;
 import com.dynamsoft.core.LicenseManager;
@@ -55,6 +57,7 @@ public class DocumentNormalizerPlugin extends Plugin {
         if (ddn != null) {
             try {
                 ddn.initRuntimeSettingsFromString(template);
+                call.resolve();
             } catch (DocumentNormalizerException e) {
                 e.printStackTrace();
                 call.reject(e.getMessage());
@@ -100,8 +103,12 @@ public class DocumentNormalizerPlugin extends Plugin {
                 Quadrilateral quadrilateral = new Quadrilateral();
                 quadrilateral.points = points;
                 NormalizedImageResult result = ddn.normalize(Utils.base642Bitmap(source),quadrilateral);
+                Bitmap bm = result.image.toBitmap();
                 JSObject response = new JSObject();
-                response.put("data",Utils.bitmap2Base64(result.image.toBitmap()));
+                JSObject resultObject = new JSObject();
+                resultObject.put("data",Utils.bitmap2Base64(bm));
+                response.put("result",resultObject);
+                call.resolve(response);
             }catch (Exception e) {
                 call.reject(e.getMessage());
             }
