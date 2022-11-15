@@ -4,5 +4,9 @@
 // Define the plugin using the CAP_PLUGIN Macro, and
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
 CAP_PLUGIN(DocumentNormalizerPlugin, "DocumentNormalizer",
-           CAP_PLUGIN_METHOD(echo, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(initialize, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(initLicense, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(initRuntimeSettingsFromString, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(detect, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(normalize, CAPPluginReturnPromise);
 )

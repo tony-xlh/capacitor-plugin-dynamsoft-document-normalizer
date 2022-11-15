@@ -7,8 +7,6 @@ import Capacitor
  */
 @objc(DocumentNormalizerPlugin)
 public class DocumentNormalizerPlugin: CAPPlugin {
-    private let implementation = DocumentNormalizer()
-
     @objc func echo(_ call: CAPPluginCall) {
         let value = call.getString("value") ?? ""
         call.resolve([
