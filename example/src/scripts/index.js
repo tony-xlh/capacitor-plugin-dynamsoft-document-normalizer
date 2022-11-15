@@ -291,8 +291,11 @@ function retake(){
 
 async function normalizeImage() {
   console.log("normalize image");
-  let normalizationResult = (await DocumentNormalizer.normalize({source:photoTaken,quad:detectionResult.location})).result;
-  document.getElementById("normalizedImage").src = normalizationResult.data;
+  let normalizationResult = (await DocumentNormalizer.normalize({source:photoTaken,quad:detectionResult.location})).result.data;
+  if (!normalizationResult.startsWith("data")) {
+    normalizationResult = "data:image/jpeg;base64," + normalizationResult;
+  }
+  document.getElementById("normalizedImage").src = normalizationResult;
 }
 
 async function onColorModeChange() {
