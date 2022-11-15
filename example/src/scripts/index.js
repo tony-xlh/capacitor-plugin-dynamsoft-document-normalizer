@@ -52,7 +52,8 @@ async function initialize(){
     
     if (Capacitor.isNativePlatform()) {
       console.log(ScreenOrientation.type)
-      if (ScreenOrientation.type === ScreenOrientation.ORIENTATIONS.PORTRAIT ) {
+      if (ScreenOrientation.type.toLowerCase().indexOf("portrait") != -1) {
+        console.log("switch width and height");
         let temp = width;
         width = height;
         height = temp;
