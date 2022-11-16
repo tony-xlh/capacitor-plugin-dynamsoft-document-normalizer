@@ -27,7 +27,9 @@ public class DocumentNormalizerPlugin extends Plugin {
     @PluginMethod
     public void initialize(PluginCall call) {
         try {
-            ddn = new DocumentNormalizer();
+            if (ddn == null) {
+                ddn = new DocumentNormalizer();
+            }
             call.resolve();
         } catch (DocumentNormalizerException e) {
             e.printStackTrace();
