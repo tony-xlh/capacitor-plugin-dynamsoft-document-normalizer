@@ -10,7 +10,9 @@ import DynamsoftDocumentNormalizer
 public class DocumentNormalizerPlugin: CAPPlugin,LicenseVerificationListener   {
     private var ddn:DynamsoftDocumentNormalizer!;
     @objc func initialize(_ call: CAPPluginCall) {
-        ddn = DynamsoftDocumentNormalizer()
+        if ddn == nil {
+            ddn = DynamsoftDocumentNormalizer()
+        }
         call.resolve()
     }
     
