@@ -2,6 +2,8 @@
 
 A document scanning plugin for Capacitor using [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/docs/).
 
+[Online demo](https://chic-syrniki-fac13f.netlify.app/)
+
 ## Supported Platforms
 
 * Web
