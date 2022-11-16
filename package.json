@@ -19,6 +19,9 @@
     "type": "git",
     "url": "git+https://github.com/tony-xlh/capacitor-plugin-dynamsoft-document-normalizer.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "bugs": {
     "url": "https://github.com/tony-xlh/capacitor-plugin-dynamsoft-document-normalizer/issues"
   },
