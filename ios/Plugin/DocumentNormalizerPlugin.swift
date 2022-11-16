@@ -42,4 +42,38 @@ public class DocumentNormalizerPlugin: CAPPlugin,LicenseVerificationListener   {
     public func licenseVerificationCallback(_ isSuccess: Bool, error: Error?) {
         print(isSuccess)
     }
+    
+    @objc func detect(_ call: CAPPluginCall) {
+        var base64 = call.getString("source") ?? ""
+        base64 = Utils.removeDataURLHead(base64)
+        let image = Utils.convertBase64ToImage(base64)
+        var returned_results: [Any] = []
+        let results = try? ddn.detectQuadFromImage(image!)
+        if results != nil {
+            for result in results! {
+                returned_results.append(Utils.wrapDetectionResult(result:result))
+            }
+        }
+        call.resolve(["results":returned_results])
+    }
+    
+    @objc func normalize(_ call: CAPPluginCall) {
+        do {
+            var base64 = call.getString("source") ?? ""
+            base64 = Utils.removeDataURLHead(base64)
+            let image = Utils.convertBase64ToImage(base64)
+            let quad = call.getObject("quad")
+            let points = quad!["points"] as! [[String:NSNumber]]
+            let quadrilateral = iQuadrilateral.init()
+            quadrilateral.points = Utils.convertPoints(points)
+            
+            let normalizedImageResult = try ddn.normalizeImage(image!, quad: quadrilateral)
+            let normalizedUIImage = try? normalizedImageResult.image.toUIImage()
+            let normalziedResultAsBase64 = Utils.getBase64FromImage(normalizedUIImage!)
+            call.resolve(["result":["data":normalziedResultAsBase64]])
+        }catch {
+            print("Unexpected error: \(error).")
+            call.reject(error.localizedDescription)
+        }
+    }
 }
