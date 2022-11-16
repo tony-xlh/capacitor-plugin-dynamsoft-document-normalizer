@@ -10,6 +10,7 @@ console.log('webpack starterkit');
 let frameWidth;
 let frameHeight;
 let photoTaken = null;
+let photoTakenAsDCEFrame = null;
 let detectionResult;
 let onPlayedListener;
 let interval;
@@ -173,6 +174,7 @@ async function toggleTorch(){
 
 function startScanning(){
   photoTaken = null;
+  photoTakenAsDCEFrame = null;
   previousResults = [];
   scanning = false;
   interval = setInterval(captureAndDetect,100);
@@ -209,6 +211,9 @@ async function captureAndDetect(){
     if (ifSteady) {
       if (!base64) {
         base64 = frame.toCanvas().toDataURL("image/jpeg");
+      }
+      if (frame) {
+        photoTakenAsDCEFrame = frame;
       }
       photoTaken = base64;
       if (!photoTaken.startsWith("data")) {
@@ -321,7 +326,13 @@ function retake(){
 
 async function normalizeImage() {
   console.log("normalize image");
-  let normalizationResult = (await DocumentNormalizer.normalize({source:photoTaken,quad:detectionResult.location})).result.data;
+  let source;
+  if (photoTakenAsDCEFrame) {
+    source = photoTakenAsDCEFrame;
+  }else{
+    source = photoTaken;
+  }
+  let normalizationResult = (await DocumentNormalizer.normalize({source:source,quad:detectionResult.location})).result.data;
   if (!normalizationResult.startsWith("data")) {
     normalizationResult = "data:image/jpeg;base64," + normalizationResult;
   }
