@@ -2,6 +2,12 @@
 
 A document scanning plugin for Capacitor using [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/docs/).
 
+## Supported Platforms
+
+* Web
+* Android
+* iOS
+
 ## Install
 
 ```bash
