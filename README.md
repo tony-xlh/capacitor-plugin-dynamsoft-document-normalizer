@@ -1,6 +1,6 @@
 # capacitor-plugin-dynamsoft-document-normalizer
 
-A document scanning plugin for Capacitor using Dynamsoft Document Normalizer
+A document scanning plugin for Capacitor using [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/docs/).
 
 ## Install
 
