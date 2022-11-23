@@ -6,8 +6,14 @@ export interface DocumentNormalizerPlugin {
   initialize(): Promise<void>;
   initLicense(options: {license: string}): Promise<void>;
   initRuntimeSettingsFromString(options: {template:string}): Promise<void>;
-  detect(options:{source:string | DCEFrame}): Promise<{results:DetectedQuadResult[]}>;
-  normalize(options:{source:string | DCEFrame, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}>;
+  /**
+  * Android and iOS only support base64 string
+  */
+  detect(options:{source:string | DCEFrame | HTMLImageElement}): Promise<{results:DetectedQuadResult[]}>;
+  /**
+  * Android and iOS only support base64 string
+  */
+  normalize(options:{source:string | DCEFrame | HTMLImageElement, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}>;
   /**
   * Web Only
   */

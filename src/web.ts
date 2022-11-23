@@ -35,7 +35,7 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
     }
   }
 
-  async detect(options: { source: string | DCEFrame }): Promise<{results:DetectedQuadResult[]}> {
+  async detect(options: { source: string | DCEFrame | HTMLImageElement}): Promise<{results:DetectedQuadResult[]}> {
     if (this.normalizer) {
       let detectedQuads = await this.normalizer.detectQuad(options.source);
       return {results:detectedQuads};
@@ -44,7 +44,7 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
     }
   }
 
-  async normalize(options: { source: string | DCEFrame, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}> {
+  async normalize(options: { source: string | DCEFrame | HTMLImageElement, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}> {
     if (this.normalizer) {
       let result = await this.normalizer.normalize(options.source,{quad:options.quad});
       let normalizedResult:NormalizedImageResult = {
