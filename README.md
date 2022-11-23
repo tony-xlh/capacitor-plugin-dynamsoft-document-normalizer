@@ -73,12 +73,14 @@ initRuntimeSettingsFromString(options: { template: string; }) => Promise<void>
 ### detect(...)
 
 ```typescript
-detect(options: { source: string | DCEFrame; }) => Promise<{ results: DetectedQuadResult[]; }>
+detect(options: { source: string | DCEFrame | HTMLImageElement; }) => Promise<{ results: DetectedQuadResult[]; }>
 ```
 
-| Param         | Type                                                                 |
-| ------------- | -------------------------------------------------------------------- |
-| **`options`** | <code>{ source: string \| <a href="#dceframe">DCEFrame</a>; }</code> |
+Android and iOS only support base64 string
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ source: any; }</code> |
 
 **Returns:** <code>Promise&lt;{ results: DetectedQuadResult[]; }&gt;</code>
 
@@ -88,12 +90,14 @@ detect(options: { source: string | DCEFrame; }) => Promise<{ results: DetectedQu
 ### normalize(...)
 
 ```typescript
-normalize(options: { source: string | DCEFrame; quad: Quadrilateral; }) => Promise<{ result: NormalizedImageResult; }>
+normalize(options: { source: string | DCEFrame | HTMLImageElement; quad: Quadrilateral; }) => Promise<{ result: NormalizedImageResult; }>
 ```
 
-| Param         | Type                                                                                                                   |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ source: string \| <a href="#dceframe">DCEFrame</a>; quad: <a href="#quadrilateral">Quadrilateral</a>; }</code> |
+Android and iOS only support base64 string
+
+| Param         | Type                                                                            |
+| ------------- | ------------------------------------------------------------------------------- |
+| **`options`** | <code>{ source: any; quad: <a href="#quadrilateral">Quadrilateral</a>; }</code> |
 
 **Returns:** <code>Promise&lt;{ result: <a href="#normalizedimageresult">NormalizedImageResult</a>; }&gt;</code>
 
@@ -105,6 +109,8 @@ normalize(options: { source: string | DCEFrame; quad: Quadrilateral; }) => Promi
 ```typescript
 setEngineResourcesPath(options: { path: string; }) => Promise<void>
 ```
+
+Web Only
 
 | Param         | Type                           |
 | ------------- | ------------------------------ |
