@@ -9,11 +9,11 @@ export interface DocumentNormalizerPlugin {
   /**
   * Android and iOS only support base64 string
   */
-  detect(options:{source:string | DCEFrame | HTMLImageElement}): Promise<{results:DetectedQuadResult[]}>;
+  detect(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement}): Promise<{results:DetectedQuadResult[]}>;
   /**
   * Android and iOS only support base64 string
   */
-  normalize(options:{source:string | DCEFrame | HTMLImageElement, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}>;
+  normalize(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}>;
   /**
   * Web Only
   */
