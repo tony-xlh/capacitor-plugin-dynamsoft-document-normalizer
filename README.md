@@ -73,14 +73,14 @@ initRuntimeSettingsFromString(options: { template: string; }) => Promise<void>
 ### detect(...)
 
 ```typescript
-detect(options: { source: string | DCEFrame | HTMLImageElement | HTMLCanvasElement; }) => Promise<{ results: DetectedQuadResult[]; }>
+detect(options: { source: string | DCEFrame | HTMLImageElement | HTMLCanvasElement; copy?: boolean; }) => Promise<{ results: DetectedQuadResult[]; }>
 ```
 
-Android and iOS only support base64 string
+Android and iOS only support base64 string. The copy option is for web platform to keep the frame's data.
 
-| Param         | Type                          |
-| ------------- | ----------------------------- |
-| **`options`** | <code>{ source: any; }</code> |
+| Param         | Type                                          |
+| ------------- | --------------------------------------------- |
+| **`options`** | <code>{ source: any; copy?: boolean; }</code> |
 
 **Returns:** <code>Promise&lt;{ results: DetectedQuadResult[]; }&gt;</code>
 
