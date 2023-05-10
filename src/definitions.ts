@@ -7,9 +7,9 @@ export interface DocumentNormalizerPlugin {
   initLicense(options: {license: string}): Promise<void>;
   initRuntimeSettingsFromString(options: {template:string}): Promise<void>;
   /**
-  * Android and iOS only support base64 string
+  * Android and iOS only support base64 string. The copy option is for web platform to keep the frame's data.
   */
-  detect(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement}): Promise<{results:DetectedQuadResult[]}>;
+  detect(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement,copy?:boolean}): Promise<{results:DetectedQuadResult[]}>;
   /**
   * Android and iOS only support base64 string
   */
