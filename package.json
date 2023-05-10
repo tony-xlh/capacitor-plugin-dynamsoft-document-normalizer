@@ -86,6 +86,6 @@
     }
   },
   "dependencies": {
-    "dynamsoft-document-normalizer": "^1.0.12"
+    "dynamsoft-document-normalizer": "1.0.12"
   }
 }

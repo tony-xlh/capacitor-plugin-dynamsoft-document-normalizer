@@ -7,7 +7,7 @@ import type { DocumentNormalizerPlugin, NormalizedImageResult } from './definiti
 
 export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormalizerPlugin {
   private normalizer:DocumentNormalizer | undefined;
-  private engineResourcesPath: string = "https://cdn.jsdelivr.net/npm/dynamsoft-document-normalizer@1.0.10/dist/";
+  private engineResourcesPath: string = "https://cdn.jsdelivr.net/npm/dynamsoft-document-normalizer@1.0.12/dist/";
   private license: string = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
   async initialize(): Promise<void> {
     try {
