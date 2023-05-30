@@ -9,6 +9,7 @@ import DynamsoftDocumentNormalizer
 @objc(DocumentNormalizerPlugin)
 public class DocumentNormalizerPlugin: CAPPlugin,LicenseVerificationListener   {
     private var ddn:DynamsoftDocumentNormalizer!;
+    private var licenseCall:CAPPluginCall!;
     @objc func initialize(_ call: CAPPluginCall) {
         if ddn == nil {
             ddn = DynamsoftDocumentNormalizer()
@@ -17,9 +18,10 @@ public class DocumentNormalizerPlugin: CAPPlugin,LicenseVerificationListener   {
     }
     
     @objc func initLicense(_ call: CAPPluginCall) {
-        let license = call.getString("license") ?? "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="
+        call.keepAlive = true
+        licenseCall = call
+        var license = call.getString("license") ?? "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="
         DynamsoftLicenseManager.initLicense(license, verificationDelegate: self)
-        call.resolve()
     }
     
     @objc func initRuntimeSettingsFromString(_ call: CAPPluginCall) {
@@ -43,6 +45,17 @@ public class DocumentNormalizerPlugin: CAPPlugin,LicenseVerificationListener   {
     
     public func licenseVerificationCallback(_ isSuccess: Bool, error: Error?) {
         print(isSuccess)
+        var msg:String? = nil
+        if(error != nil)
+        {
+            let err = error as NSError?
+            msg = err!.userInfo[NSUnderlyingErrorKey] as? String
+            print("Server license verify failed: ", msg ?? "")
+            licenseCall.reject(msg ?? "")
+        }else{
+            licenseCall.resolve()
+        }
+        licenseCall = nil
     }
     
     @objc func detect(_ call: CAPPluginCall) {
