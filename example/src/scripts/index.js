@@ -25,6 +25,7 @@ startBtn.addEventListener("click",startCamera);
 okayBtn.addEventListener("click",okay);
 retakeBtn.addEventListener("click",retake);
 toggleTorchBtn.addEventListener("click",toggleTorch);
+document.getElementById("closeButton").addEventListener("click",exitScanner);
 document.getElementById("colorModeSelect").selectedIndex = 2;
 document.getElementById("colorModeSelect").addEventListener("change",onColorModeChange);
 
@@ -103,13 +104,12 @@ async function startCamera(){
 function toggleControlsDisplay(show){
   if (show) {
     document.getElementsByClassName("home")[0].style.display = "none";
-    document.getElementById("normalizationResult").style.display = "none";
     document.getElementsByClassName("controls")[0].style.display = "";
   }else {
     document.getElementsByClassName("home")[0].style.display = "";
-    document.getElementById("normalizationResult").style.display = "";
     document.getElementsByClassName("controls")[0].style.display = "none";
   }
+  document.getElementById("normalizedImage").style.display = "none";
 }
 
 async function loadCameras(){
@@ -279,21 +279,11 @@ async function checkIfSteady(results) {
   return false;
 }
 
-function displayPhotoAndShowConfirmation(){
-  let img = new Image();
-  img.onload = function(){
-    let svgElement = document.getElementById("overlay");
-    let svgImage = document.createElementNS("http://www.w3.org/2000/svg", "image");
-    svgImage.setAttribute("href",img.src);
-    svgElement.setAttribute("viewBox","0 0 "+img.naturalWidth+" "+img.naturalHeight);
-    svgElement.innerHTML = "";
-    detectionResult = previousResults[0];
-    drawOverlay([detectionResult]);
-    let polygons = svgElement.getElementsByTagName("polygon");
-    svgElement.insertBefore(svgImage,polygons[0]);
-    document.getElementById("confirmation").style.display = "";
-  };
-  img.src = photoTaken;
+async function displayPhotoAndShowConfirmation(){
+  detectionResult = previousResults[0];
+  await normalizeImage();
+  document.getElementById("normalizedImage").style.display = "";
+  document.getElementById("confirmation").style.display = "";
 }
 
 function steady(){
@@ -314,16 +304,33 @@ function steady(){
 }
 
 async function okay(){
+  const continuous = document.getElementById("continuous").checked;
+  document.getElementById("normalizedImage").style.display = "none";
   document.getElementById("confirmation").style.display = "none";
-  document.getElementById("normalizationResult").style.display = "";
   let svgElement = document.getElementById("overlay");
   svgElement.innerHTML = "";
+  appendImage();
+  if (continuous === false) {
+    await exitScanner();
+  }else{
+    retake();
+  }
+}
+
+async function exitScanner(){
   await CameraPreview.stopCamera();
   toggleControlsDisplay(false);
-  normalizeImage();
+}
+
+function appendImage(){
+  let img = document.createElement("img");
+  img.className = "page";
+  img.src = document.getElementById("normalizedImage").src;
+  document.getElementById("documentViewer").append(img);
 }
 
 function retake(){
+  document.getElementById("normalizedImage").style.display = "none";
   document.getElementById("confirmation").style.display = "none";
   let svgElement = document.getElementById("overlay");
   svgElement.innerHTML = "";
