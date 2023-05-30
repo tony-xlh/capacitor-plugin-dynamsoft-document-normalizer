@@ -280,7 +280,7 @@ async function checkIfSteady(results) {
 }
 
 async function displayPhotoAndShowConfirmation(){
-  detectionResult = previousResults[0];
+  detectionResult = previousResults[previousResults.length - 1];
   await normalizeImage();
   document.getElementById("normalizedImage").style.display = "";
   document.getElementById("confirmation").style.display = "";
@@ -365,4 +365,3 @@ async function onColorModeChange() {
   console.log("update settings done");
   normalizeImage();
 }
-
