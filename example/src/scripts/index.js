@@ -1,8 +1,11 @@
 import '../styles/index.scss';
 import { ScreenOrientation } from "@awesome-cordova-plugins/screen-orientation";
 import { Capacitor } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import { CameraPreview } from "capacitor-plugin-dynamsoft-camera-preview";
 import { DocumentNormalizer,intersectionOverUnion } from "capacitor-plugin-dynamsoft-document-normalizer";
+import { jsPDF } from "jspdf";
 
 
 console.log('webpack starterkit');
@@ -26,6 +29,7 @@ okayBtn.addEventListener("click",okay);
 retakeBtn.addEventListener("click",retake);
 toggleTorchBtn.addEventListener("click",toggleTorch);
 document.getElementById("closeButton").addEventListener("click",exitScanner);
+document.getElementById("saveButton").addEventListener("click",saveAsPDF);
 document.getElementById("colorModeSelect").selectedIndex = 2;
 document.getElementById("colorModeSelect").addEventListener("change",onColorModeChange);
 
@@ -364,4 +368,48 @@ async function onColorModeChange() {
   }
   console.log("update settings done");
   normalizeImage();
+}
+
+async function saveAsPDF(){
+  const viewer = document.getElementById("documentViewer");
+  const images = viewer.getElementsByTagName("img");
+  if (images.length === 0) {
+    alert("No images");
+    return;
+  }
+  let orientation = "p";
+  if (images[0].naturalWidth>images[0].naturalHeight) {
+    orientation = "l";
+  }
+  const options  = {orientation:orientation,unit: "px", format: [images[0].naturalWidth, images[0].naturalHeight]};
+  const doc = new jsPDF(options);
+  let index = 0;
+  for (const image of images) {
+    if (index > 0) {
+      if (image.naturalWidth>image.naturalHeight) {
+        orientation = "l";
+      }else{
+        orientation = "p";
+      }
+      doc.addPage([image.naturalWidth,image.naturalHeight],orientation);
+    }
+    doc.addImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
+    index = index + 1;
+  }
+  if (Capacitor.isNativePlatform()) {
+    let data = doc.output("datauristring");    
+    let fileName = "scanned.pdf";
+    let writingResult = await Filesystem.writeFile({
+      path: fileName,
+      data: data,
+      directory: Directory.Cache
+    });
+    Share.share({
+      title: fileName,
+      text: fileName,
+      url: writingResult.uri,
+    });
+  }else{
+    doc.save("a4.pdf");
+  }
 }
