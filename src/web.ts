@@ -8,11 +8,8 @@ import type { DocumentNormalizerPlugin, NormalizedImageResult } from './definiti
 export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormalizerPlugin {
   private normalizer:DocumentNormalizer | undefined;
   private engineResourcesPath: string = "https://cdn.jsdelivr.net/npm/dynamsoft-document-normalizer@1.0.12/dist/";
-  private license: string = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
   async initialize(): Promise<void> {
     try {
-      DocumentNormalizer.license = this.license;
-      DocumentNormalizer.engineResourcePath = this.engineResourcesPath;
       this.normalizer = await DocumentNormalizer.createInstance();
     } catch (error) {
       throw error;
@@ -20,7 +17,14 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
   }
 
   async initLicense(options: { license: string }): Promise<void> {
-    this.license = options.license;
+    try {
+      DocumentNormalizer.engineResourcePath = this.engineResourcesPath;
+      DocumentNormalizer.license = options.license;
+      await DocumentNormalizer.loadWasm();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   async setEngineResourcesPath(options: { path: string; }): Promise<void> {

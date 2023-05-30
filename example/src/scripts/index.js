@@ -35,12 +35,18 @@ async function initialize(){
   //public trial
   let mobileLicense = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
   let browserLicense = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
-  if (Capacitor.isNativePlatform()) {
-    await DocumentNormalizer.initLicense({license:mobileLicense});
-    document.getElementById("overlay").setAttribute("preserveAspectRatio","xMidYMid slice");
-  }else{
-    await DocumentNormalizer.initLicense({license:browserLicense});
+  try{
+    if (Capacitor.isNativePlatform()) {
+      await DocumentNormalizer.initLicense({license:mobileLicense});
+      document.getElementById("overlay").setAttribute("preserveAspectRatio","xMidYMid slice");
+    }else{
+      await DocumentNormalizer.initLicense({license:browserLicense});
+    }
+  }catch(error){
+    alert(error);
+    return;
   }
+  
   
   await DocumentNormalizer.initialize();
   //set initial color mode to color
