@@ -14,6 +14,8 @@ Pod::Spec.new do |s|
   s.ios.deployment_target  = '13.0'
   s.dependency 'Capacitor'
   s.dependency "DynamsoftCore", "= 2.0.2"
+  s.dependency "DynamsoftImageProcessing", "= 1.0.20"
+  s.dependency "DynamsoftIntermediateResult", "= 1.0.20"
   s.dependency "DynamsoftDocumentNormalizer", "= 1.0.20"
   s.swift_version = '5.1'
 end
