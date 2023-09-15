@@ -4,6 +4,12 @@ A document scanning plugin for Capacitor using [Dynamsoft Document Normalizer](h
 
 [Online demo](https://chic-syrniki-fac13f.netlify.app/)
 
+## Versions
+
+For Capacitor v5, use v1.x.
+
+For Capacitor v4, use v0.x.
+
 ## Supported Platforms
 
 * Web
