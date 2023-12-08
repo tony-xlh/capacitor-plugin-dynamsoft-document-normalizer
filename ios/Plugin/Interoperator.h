@@ -6,8 +6,8 @@
 //  Copyright © 2023 Max Lynch. All rights reserved.
 //
 
-#ifndef Interoperator_h
-#define Interoperator_h
-
-
-#endif /* Interoperator_h */
+#import <Foundation/Foundation.h>
+#import <objc/message.h>
+@interface Interoperator : NSObject
+- (UIImage*)getUIImage;
+@end

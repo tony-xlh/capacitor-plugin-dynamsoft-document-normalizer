@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-
+#import "Interoperator.h"
 //! Project version number for Plugin.
 FOUNDATION_EXPORT double PluginVersionNumber;
 

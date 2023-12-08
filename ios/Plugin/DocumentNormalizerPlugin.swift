@@ -72,6 +72,21 @@ public class DocumentNormalizerPlugin: CAPPlugin,LicenseVerificationListener   {
         call.resolve(["results":returned_results])
     }
     
+    @objc func detectBitmap(_ call: CAPPluginCall) {
+        let interop = Interoperator()
+        let image = interop.getUIImage()
+        var returned_results: [Any] = []
+        if image != nil {
+            let results = try? ddn.detectQuadFromImage(image!)
+            if results != nil {
+                for result in results! {
+                    returned_results.append(Utils.wrapDetectionResult(result:result))
+                }
+            }
+        }
+        call.resolve(["results":returned_results])
+    }
+    
     @objc func normalize(_ call: CAPPluginCall) {
         do {
             var base64 = call.getString("source") ?? ""
