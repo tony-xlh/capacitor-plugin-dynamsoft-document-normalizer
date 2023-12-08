@@ -44,7 +44,7 @@
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.5.1",
-    "node-sass": "^9.0.0",
+    "node-sass": "^7.0.1",
     "postcss-loader": "^6.2.1",
     "postcss-preset-env": "^7.2.3",
     "sass-loader": "^12.4.0",
@@ -69,6 +69,7 @@
     "capacitor-plugin-dynamsoft-document-normalizer": "file:..",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "core-js": "^3.20.3",
-    "jspdf": "^2.5.1"
+    "jspdf": "^2.5.1",
+    "rxjs": "^7.8.1"
   }
 }
