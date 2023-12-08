@@ -21,6 +21,9 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 @CapacitorPlugin(name = "DocumentNormalizer")
 public class DocumentNormalizerPlugin extends Plugin {
     private DocumentNormalizer ddn;
@@ -86,6 +89,38 @@ public class DocumentNormalizerPlugin extends Plugin {
                 response.put("results",detectionResults);
                 call.resolve(response);
             } catch (DocumentNormalizerException e) {
+                e.printStackTrace();
+                call.reject(e.getMessage());
+            }
+        }else{
+            call.reject("DDN not initialized");
+        }
+    }
+    @PluginMethod
+    public void detectBitmap(PluginCall call) {
+        if (ddn != null) {
+            try {
+                JSObject response = new JSObject();
+                JSArray detectionResults = new JSArray();
+
+                Class cls = Class.forName("com.dynamsoft.capacitor.dce.CameraPreviewPlugin");
+                Method m = cls.getMethod("getBitmap",null);
+                Bitmap bitmap = (Bitmap) m.invoke(null, null);
+                if (bitmap != null) {
+                    DetectedQuadResult[] results = ddn.detectQuad(bitmap);
+                    if (results != null) {
+                        for (DetectedQuadResult result:results) {
+                            detectionResults.put(Utils.getMapFromDetectedQuadResult(result));
+                        }
+                    }
+                }
+                response.put("results",detectionResults);
+                call.resolve(response);
+            } catch (DocumentNormalizerException e) {
+                e.printStackTrace();
+                call.reject(e.getMessage());
+            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                     InvocationTargetException e) {
                 e.printStackTrace();
                 call.reject(e.getMessage());
             }

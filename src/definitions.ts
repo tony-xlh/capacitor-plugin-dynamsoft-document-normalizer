@@ -11,6 +11,10 @@ export interface DocumentNormalizerPlugin {
   */
   detect(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement,copy?:boolean}): Promise<{results:DetectedQuadResult[]}>;
   /**
+  * Android and iOS only method which directly read camera frames.
+  */
+  detectBitmap(): Promise<{results:DetectedQuadResult[]}>;
+  /**
   * Android and iOS only support base64 string
   */
   normalize(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}>;

@@ -31,6 +31,7 @@ npx cap sync
 * [`initLicense(...)`](#initlicense)
 * [`initRuntimeSettingsFromString(...)`](#initruntimesettingsfromstring)
 * [`detect(...)`](#detect)
+* [`detectBitmap()`](#detectbitmap)
 * [`normalize(...)`](#normalize)
 * [`setEngineResourcesPath(...)`](#setengineresourcespath)
 * [Interfaces](#interfaces)
@@ -87,6 +88,19 @@ Android and iOS only support base64 string. The copy option is for web platform 
 | Param         | Type                                          |
 | ------------- | --------------------------------------------- |
 | **`options`** | <code>{ source: any; copy?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ results: DetectedQuadResult[]; }&gt;</code>
+
+--------------------
+
+
+### detectBitmap()
+
+```typescript
+detectBitmap() => Promise<{ results: DetectedQuadResult[]; }>
+```
+
+Android and iOS only method which directly read camera frames.
 
 **Returns:** <code>Promise&lt;{ results: DetectedQuadResult[]; }&gt;</code>
 

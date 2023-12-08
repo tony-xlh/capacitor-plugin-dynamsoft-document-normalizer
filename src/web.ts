@@ -52,6 +52,10 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
     }
   }
 
+  detectBitmap(): Promise<{ results: DetectedQuadResult[]; }> {
+    throw new Error('Method not implemented.');
+  }
+
   async normalize(options: { source: string | DCEFrame | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}> {
     if (this.normalizer) {
       let result = await this.normalizer.normalize(options.source,{quad:options.quad});
