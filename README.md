@@ -100,7 +100,7 @@ Android and iOS only support base64 string. The copy option is for web platform 
 detectBitmap() => Promise<{ results: DetectedQuadResult[]; }>
 ```
 
-Android and iOS only method which directly read camera frames.
+Android and iOS only method which directly reads camera frames.
 
 **Returns:** <code>Promise&lt;{ results: DetectedQuadResult[]; }&gt;</code>
 
