@@ -1,4 +1,4 @@
-import '../styles/index.scss';
+import '../styles/index.css';
 import { ScreenOrientation } from "@awesome-cordova-plugins/screen-orientation";
 import { Capacitor } from '@capacitor/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
@@ -208,9 +208,10 @@ async function captureAndDetect(){
   let frame;
   try {
     if (Capacitor.isNativePlatform()) {
-      let result = await CameraPreview.takeSnapshot({quality:100});
-      base64 = result.base64;
-      results = (await DocumentNormalizer.detect({source:base64})).results;
+      //let result = await CameraPreview.takeSnapshot({quality:100});
+      //base64 = result.base64;
+      //results = (await DocumentNormalizer.detect({source:base64})).results;
+      results = (await DocumentNormalizer.detectBitmap()).results;
     } else {
       let result = await CameraPreview.takeSnapshot2();
       frame = result.frame;
@@ -220,7 +221,11 @@ async function captureAndDetect(){
     let ifSteady = await checkIfSteady(results);
     if (ifSteady) {
       if (!base64) {
-        base64 = frame.toCanvas().toDataURL("image/jpeg");
+        if (Capacitor.isNativePlatform()) {
+          base64 = (await CameraPreview.takeSnapshot({quality:100})).base64;
+        }else{
+          base64 = frame.toCanvas().toDataURL("image/jpeg");
+        }
       }
       if (frame) {
         photoTakenAsDCEFrame = frame;
