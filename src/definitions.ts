@@ -11,7 +11,7 @@ export interface DocumentNormalizerPlugin {
   */
   detect(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement,copy?:boolean}): Promise<{results:DetectedQuadResult[]}>;
   /**
-  * Android and iOS only method which directly reads camera frames.
+  * Android and iOS only method which directly reads camera frames from capacitor-plugin-dynamsoft-camera-preview
   */
   detectBitmap(): Promise<{results:DetectedQuadResult[]}>;
   /**

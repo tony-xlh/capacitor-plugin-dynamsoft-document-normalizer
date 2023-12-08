@@ -100,7 +100,7 @@ Android and iOS only support base64 string. The copy option is for web platform 
 detectBitmap() => Promise<{ results: DetectedQuadResult[]; }>
 ```
 
-Android and iOS only method which directly reads camera frames.
+Android and iOS only method which directly reads camera frames from capacitor-plugin-dynamsoft-camera-preview
 
 **Returns:** <code>Promise&lt;{ results: DetectedQuadResult[]; }&gt;</code>
 
