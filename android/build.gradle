@@ -63,5 +63,9 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     // DDN
-    implementation 'com.dynamsoft:dynamsoftdocumentnormalizer:1.0.21'
+    implementation 'com.dynamsoft:dynamsoftcapturevisionrouter:2.0.21'
+    implementation 'com.dynamsoft:dynamsoftdocumentnormalizer:2.0.20'
+    implementation 'com.dynamsoft:dynamsoftcore:3.0.20'
+    implementation 'com.dynamsoft:dynamsoftlicense:3.0.30'
+    implementation 'com.dynamsoft:dynamsoftimageprocessing:2.0.21'
 }

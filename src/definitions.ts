@@ -1,23 +1,22 @@
-import { DCEFrame } from "dynamsoft-camera-enhancer";
-import { DetectedQuadResult } from "dynamsoft-document-normalizer";
-import { Quadrilateral } from "dynamsoft-document-normalizer/dist/types/interface/quadrilateral";
+import { Quadrilateral } from "dynamsoft-core";
+import { DetectedQuadResultItem } from "dynamsoft-document-normalizer";
 
 export interface DocumentNormalizerPlugin {
   initialize(): Promise<void>;
   initLicense(options: {license: string}): Promise<void>;
   initRuntimeSettingsFromString(options: {template:string}): Promise<void>;
   /**
-  * Android and iOS only support base64 string. The copy option is for web platform to keep the frame's data.
+  * Android and iOS only support base64 string. Pass a template name to specify the template.
   */
-  detect(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement,copy?:boolean}): Promise<{results:DetectedQuadResult[]}>;
+  detect(options:{source:string | HTMLImageElement | HTMLCanvasElement,template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
   /**
-  * Android and iOS only method which directly reads camera frames from capacitor-plugin-dynamsoft-camera-preview
+  * Android and iOS only method which directly reads camera frames from capacitor-plugin-dynamsoft-camera-preview.  Pass a template name to specify the template.
   */
-  detectBitmap(): Promise<{results:DetectedQuadResult[]}>;
+  detectBitmap(options:{template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
   /**
-  * Android and iOS only support base64 string
+  * Android and iOS only support base64 string. Pass a template name to specify the template.
   */
-  normalize(options:{source:string | DCEFrame | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral}): Promise<{result:NormalizedImageResult}>;
+  normalize(options:{source:string | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral, template?:string}): Promise<{result:NormalizedImageResult}>;
   /**
   * Web Only
   */

@@ -1,4 +1,4 @@
-import { Point } from "dynamsoft-document-normalizer/dist/types/interface/point";
+import { Point } from "dynamsoft-core";
 
 export function intersectionOverUnion(pts1:Point[] ,pts2:Point[]) : number {
   let rect1 = getRectFromPoints(pts1);

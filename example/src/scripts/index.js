@@ -13,7 +13,7 @@ console.log('webpack starterkit');
 let frameWidth;
 let frameHeight;
 let photoTaken = null;
-let photoTakenAsDCEFrame = null;
+let photoTakenAsCanvas = null;
 let detectionResult;
 let onPlayedListener;
 let interval;
@@ -24,13 +24,14 @@ let startBtn = document.getElementById("startBtn");
 let okayBtn = document.getElementById("okayBtn");
 let retakeBtn = document.getElementById("retakeBtn");
 let toggleTorchBtn = document.getElementById("toggleTorchButton");
+let normalizationTemplate = "NormalizeDocument_Binary";
 startBtn.addEventListener("click",startCamera);
 okayBtn.addEventListener("click",okay);
 retakeBtn.addEventListener("click",retake);
 toggleTorchBtn.addEventListener("click",toggleTorch);
 document.getElementById("closeButton").addEventListener("click",exitScanner);
 document.getElementById("saveButton").addEventListener("click",saveAsPDF);
-document.getElementById("colorModeSelect").selectedIndex = 2;
+document.getElementById("colorModeSelect").selectedIndex = 0;
 document.getElementById("colorModeSelect").addEventListener("change",onColorModeChange);
 
 initialize();
@@ -52,10 +53,7 @@ async function initialize(){
     return;
   }
   
-  
   await DocumentNormalizer.initialize();
-  //set initial color mode to color
-  await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_COLOUR\"}]}"});
   await CameraPreview.initialize();
   
   if (Capacitor.isNativePlatform()) {
@@ -184,7 +182,7 @@ async function toggleTorch(){
 
 function startScanning(){
   photoTaken = null;
-  photoTakenAsDCEFrame = null;
+  photoTakenAsCanvas = null;
   previousResults = [];
   scanning = false;
   interval = setInterval(captureAndDetect,100);
@@ -205,7 +203,7 @@ async function captureAndDetect(){
   let results = [];
   scanning = true;
   let base64;
-  let frame;
+  let canvas;
   try {
     if (Capacitor.isNativePlatform()) {
       //let result = await CameraPreview.takeSnapshot({quality:100});
@@ -214,8 +212,8 @@ async function captureAndDetect(){
       results = (await DocumentNormalizer.detectBitmap()).results;
     } else {
       let result = await CameraPreview.takeSnapshot2();
-      frame = result.frame;
-      results = (await DocumentNormalizer.detect({source:frame})).results;
+      canvas = result.frame.toCanvas();
+      results = (await DocumentNormalizer.detect({source:canvas})).results;
     }
     drawOverlay(results);
     let ifSteady = await checkIfSteady(results);
@@ -224,11 +222,11 @@ async function captureAndDetect(){
         if (Capacitor.isNativePlatform()) {
           base64 = (await CameraPreview.takeSnapshot({quality:100})).base64;
         }else{
-          base64 = frame.toCanvas().toDataURL("image/jpeg");
+          base64 = canvas.toDataURL("image/jpeg");
         }
       }
-      if (frame) {
-        photoTakenAsDCEFrame = frame;
+      if (canvas) {
+        photoTakenAsCanvas = canvas;
       }
       photoTaken = base64;
       if (!photoTaken.startsWith("data")) {
@@ -349,27 +347,27 @@ function retake(){
 async function normalizeImage() {
   console.log("normalize image");
   let source;
-  if (photoTakenAsDCEFrame) {
-    source = photoTakenAsDCEFrame;
+  if (photoTakenAsCanvas) {
+    source = photoTakenAsCanvas;
   }else{
     source = photoTaken;
   }
-  let normalizationResult = (await DocumentNormalizer.normalize({source:source,quad:detectionResult.location})).result.data;
+  let normalizationResult = (await DocumentNormalizer.normalize({source:source,quad:detectionResult.location,template:normalizationTemplate})).result.data;
   if (!normalizationResult.startsWith("data")) {
     normalizationResult = "data:image/jpeg;base64," + normalizationResult;
   }
   document.getElementById("normalizedImage").src = normalizationResult;
 }
 
-async function onColorModeChange() {
+function onColorModeChange() {
   let selectedIndex = document.getElementById("colorModeSelect").selectedIndex;
   console.log(selectedIndex);
   if (selectedIndex === 0) {
-    await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_BINARY\"}]}"});
+    normalizationTemplate = "NormalizeDocument_Binary";
   }else if (selectedIndex === 1) {
-    await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_GRAYSCALE\"}]}"});
+    normalizationTemplate = "NormalizeDocument_Gray";
   }else {
-    await DocumentNormalizer.initRuntimeSettingsFromString({template:"{\"GlobalParameter\":{\"Name\":\"GP\",\"MaxTotalImageDimension\":0},\"ImageParameterArray\":[{\"Name\":\"IP-1\",\"NormalizerParameterName\":\"NP-1\",\"BaseImageParameterName\":\"\"}],\"NormalizerParameterArray\":[{\"Name\":\"NP-1\",\"ContentType\":\"CT_DOCUMENT\",\"ColourMode\":\"ICM_COLOUR\"}]}"});
+    normalizationTemplate = "NormalizeDocument_Color";
   }
   console.log("update settings done");
   normalizeImage();

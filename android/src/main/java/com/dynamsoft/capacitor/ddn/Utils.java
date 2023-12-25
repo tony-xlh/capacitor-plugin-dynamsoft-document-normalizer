@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.util.Base64;
 
-import com.dynamsoft.core.Quadrilateral;
-import com.dynamsoft.ddn.DetectedQuadResult;
+import com.dynamsoft.core.basic_structures.Quadrilateral;
+import com.dynamsoft.ddn.DetectedQuadResultItem;
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 
@@ -40,10 +40,10 @@ public class Utils {
         return points;
     }
 
-    public static JSObject getMapFromDetectedQuadResult(DetectedQuadResult result){
+    public static JSObject getMapFromDetectedQuadResult(DetectedQuadResultItem result){
         JSObject map = new JSObject ();
-        map.put("confidenceAsDocumentBoundary",result.confidenceAsDocumentBoundary);
-        map.put("location",getMapFromLocation(result.location));
+        map.put("confidenceAsDocumentBoundary",result.getConfidenceAsDocumentBoundary());
+        map.put("location",getMapFromLocation(result.getLocation()));
         return map;
     }
 

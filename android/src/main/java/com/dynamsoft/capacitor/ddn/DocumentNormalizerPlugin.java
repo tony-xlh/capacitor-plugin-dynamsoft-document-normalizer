@@ -4,14 +4,17 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.util.Log;
 
-import com.dynamsoft.core.CoreException;
-import com.dynamsoft.core.LicenseManager;
-import com.dynamsoft.core.LicenseVerificationListener;
-import com.dynamsoft.core.Quadrilateral;
-import com.dynamsoft.ddn.DetectedQuadResult;
-import com.dynamsoft.ddn.DocumentNormalizer;
+
+import com.dynamsoft.core.basic_structures.CapturedResult;
+import com.dynamsoft.core.basic_structures.CapturedResultItem;
+import com.dynamsoft.core.basic_structures.Quadrilateral;
+import com.dynamsoft.cvr.CaptureVisionRouter;
+import com.dynamsoft.cvr.CaptureVisionRouterException;
+import com.dynamsoft.cvr.SimplifiedCaptureVisionSettings;
+import com.dynamsoft.ddn.DetectedQuadResultItem;
 import com.dynamsoft.ddn.DocumentNormalizerException;
-import com.dynamsoft.ddn.NormalizedImageResult;
+import com.dynamsoft.ddn.NormalizedImageResultItem;
+import com.dynamsoft.license.LicenseManager;
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -26,32 +29,30 @@ import java.lang.reflect.Method;
 
 @CapacitorPlugin(name = "DocumentNormalizer")
 public class DocumentNormalizerPlugin extends Plugin {
-    private DocumentNormalizer ddn;
+    private CaptureVisionRouter cvr;
     @PluginMethod
     public void initialize(PluginCall call) {
-        try {
-            if (ddn == null) {
-                ddn = new DocumentNormalizer();
+        if (cvr == null) {
+            cvr = new CaptureVisionRouter(getContext());
+            try {
+                cvr.initSettings("{\"CaptureVisionTemplates\": [{\"Name\": \"Default\"},{\"Name\": \"DetectDocumentBoundaries_Default\",\"ImageROIProcessingNameArray\": [\"roi-detect-document-boundaries\"]},{\"Name\": \"DetectAndNormalizeDocument_Default\",\"ImageROIProcessingNameArray\": [\"roi-detect-and-normalize-document\"]},{\"Name\": \"NormalizeDocument_Binary\",\"ImageROIProcessingNameArray\": [\"roi-normalize-document-binary\"]},  {\"Name\": \"NormalizeDocument_Gray\",\"ImageROIProcessingNameArray\": [\"roi-normalize-document-gray\"]},  {\"Name\": \"NormalizeDocument_Color\",\"ImageROIProcessingNameArray\": [\"roi-normalize-document-color\"]}],\"TargetROIDefOptions\": [{\"Name\": \"roi-detect-document-boundaries\",\"TaskSettingNameArray\": [\"task-detect-document-boundaries\"]},{\"Name\": \"roi-detect-and-normalize-document\",\"TaskSettingNameArray\": [\"task-detect-and-normalize-document\"]},{\"Name\": \"roi-normalize-document-binary\",\"TaskSettingNameArray\": [\"task-normalize-document-binary\"]},  {\"Name\": \"roi-normalize-document-gray\",\"TaskSettingNameArray\": [\"task-normalize-document-gray\"]},  {\"Name\": \"roi-normalize-document-color\",\"TaskSettingNameArray\": [\"task-normalize-document-color\"]}],\"DocumentNormalizerTaskSettingOptions\": [{\"Name\": \"task-detect-and-normalize-document\",\"SectionImageParameterArray\": [{\"Section\": \"ST_REGION_PREDETECTION\",\"ImageParameterName\": \"ip-detect-and-normalize\"},{\"Section\": \"ST_DOCUMENT_DETECTION\",\"ImageParameterName\": \"ip-detect-and-normalize\"},{\"Section\": \"ST_DOCUMENT_NORMALIZATION\",\"ImageParameterName\": \"ip-detect-and-normalize\"}]},{\"Name\": \"task-detect-document-boundaries\",\"TerminateSetting\": {\"Section\": \"ST_DOCUMENT_DETECTION\"},\"SectionImageParameterArray\": [{\"Section\": \"ST_REGION_PREDETECTION\",\"ImageParameterName\": \"ip-detect\"},{\"Section\": \"ST_DOCUMENT_DETECTION\",\"ImageParameterName\": \"ip-detect\"},{\"Section\": \"ST_DOCUMENT_NORMALIZATION\",\"ImageParameterName\": \"ip-detect\"}]},{\"Name\": \"task-normalize-document-binary\",\"StartSection\": \"ST_DOCUMENT_NORMALIZATION\",   \"ColourMode\": \"ICM_BINARY\",\"SectionImageParameterArray\": [{\"Section\": \"ST_REGION_PREDETECTION\",\"ImageParameterName\": \"ip-normalize\"},{\"Section\": \"ST_DOCUMENT_DETECTION\",\"ImageParameterName\": \"ip-normalize\"},{\"Section\": \"ST_DOCUMENT_NORMALIZATION\",\"ImageParameterName\": \"ip-normalize\"}]},  {\"Name\": \"task-normalize-document-gray\",   \"ColourMode\": \"ICM_GRAYSCALE\",\"StartSection\": \"ST_DOCUMENT_NORMALIZATION\",\"SectionImageParameterArray\": [{\"Section\": \"ST_REGION_PREDETECTION\",\"ImageParameterName\": \"ip-normalize\"},{\"Section\": \"ST_DOCUMENT_DETECTION\",\"ImageParameterName\": \"ip-normalize\"},{\"Section\": \"ST_DOCUMENT_NORMALIZATION\",\"ImageParameterName\": \"ip-normalize\"}]},  {\"Name\": \"task-normalize-document-color\",   \"ColourMode\": \"ICM_COLOUR\",\"StartSection\": \"ST_DOCUMENT_NORMALIZATION\",\"SectionImageParameterArray\": [{\"Section\": \"ST_REGION_PREDETECTION\",\"ImageParameterName\": \"ip-normalize\"},{\"Section\": \"ST_DOCUMENT_DETECTION\",\"ImageParameterName\": \"ip-normalize\"},{\"Section\": \"ST_DOCUMENT_NORMALIZATION\",\"ImageParameterName\": \"ip-normalize\"}]}],\"ImageParameterOptions\": [{\"Name\": \"ip-detect-and-normalize\",\"BinarizationModes\": [{\"Mode\": \"BM_LOCAL_BLOCK\",\"BlockSizeX\": 0,\"BlockSizeY\": 0,\"EnableFillBinaryVacancy\": 0}],\"TextDetectionMode\": {\"Mode\": \"TTDM_WORD\",\"Direction\": \"HORIZONTAL\",\"Sensitivity\": 7}},{\"Name\": \"ip-detect\",\"BinarizationModes\": [{\"Mode\": \"BM_LOCAL_BLOCK\",\"BlockSizeX\": 0,\"BlockSizeY\": 0,\"EnableFillBinaryVacancy\": 0,\"ThresholdCompensation\" : 7}],\"TextDetectionMode\": {\"Mode\": \"TTDM_WORD\",\"Direction\": \"HORIZONTAL\",\"Sensitivity\": 7},\"ScaleDownThreshold\" : 512},{\"Name\": \"ip-normalize\",\"BinarizationModes\": [{\"Mode\": \"BM_LOCAL_BLOCK\",\"BlockSizeX\": 0,\"BlockSizeY\": 0,\"EnableFillBinaryVacancy\": 0}],\"TextDetectionMode\": {\"Mode\": \"TTDM_WORD\",\"Direction\": \"HORIZONTAL\",\"Sensitivity\": 7}}]}");
+            } catch (CaptureVisionRouterException e) {
+                throw new RuntimeException(e);
             }
-            call.resolve();
-        } catch (DocumentNormalizerException e) {
-            e.printStackTrace();
-            call.reject(e.getMessage());
         }
+        call.resolve();
     }
 
     @PluginMethod
     public void initLicense(PluginCall call) {
         String license = call.getString("license","DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==");
-        LicenseManager.initLicense(license, getContext(), new LicenseVerificationListener() {
-            @Override
-            public void licenseVerificationCallback(boolean isSuccess, CoreException error) {
-                if(!isSuccess){
-                    error.printStackTrace();
-                    call.reject(error.getMessage());
-                }else{
-                    call.resolve();
-                }
+        LicenseManager.initLicense(license, getContext(), (isSuccess, error) -> {
+            if (!isSuccess) {
+                Log.e("DDN", "InitLicense Error: " + error);
+                call.reject(error.getMessage());
+            }else{
+                Log.d("DDN","license valid");
+                call.resolve();
             }
         });
     }
@@ -59,11 +60,11 @@ public class DocumentNormalizerPlugin extends Plugin {
     @PluginMethod
     public void initRuntimeSettingsFromString(PluginCall call) {
         String template = call.getString("template");
-        if (ddn != null) {
+        if (cvr != null) {
             try {
-                ddn.initRuntimeSettingsFromString(template);
+                cvr.initSettings(template);
                 call.resolve();
-            } catch (DocumentNormalizerException e) {
+            } catch (CaptureVisionRouterException e) {
                 e.printStackTrace();
                 call.reject(e.getMessage());
             }
@@ -75,20 +76,24 @@ public class DocumentNormalizerPlugin extends Plugin {
     @PluginMethod
     public void detect(PluginCall call) {
         String source = call.getString("source");
+        String templateName = call.getString("template","DetectDocumentBoundaries_Default");
         source = source.replaceFirst("data:.*?;base64,","");
-        if (ddn != null) {
+        if (cvr != null) {
             try {
                 JSObject response = new JSObject();
                 JSArray detectionResults = new JSArray();
-                DetectedQuadResult[] results = ddn.detectQuad(Utils.base642Bitmap(source));
+                CapturedResult capturedResult = cvr.capture(Utils.base642Bitmap(source),templateName);
+                CapturedResultItem[] results = capturedResult.getItems();
                 if (results != null) {
-                    for (DetectedQuadResult result:results) {
-                        detectionResults.put(Utils.getMapFromDetectedQuadResult(result));
+                    for (CapturedResultItem result:results) {
+                        if (result instanceof DetectedQuadResultItem) {
+                            detectionResults.put(Utils.getMapFromDetectedQuadResult((DetectedQuadResultItem) result));
+                        }
                     }
                 }
                 response.put("results",detectionResults);
                 call.resolve(response);
-            } catch (DocumentNormalizerException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 call.reject(e.getMessage());
             }
@@ -98,27 +103,27 @@ public class DocumentNormalizerPlugin extends Plugin {
     }
     @PluginMethod
     public void detectBitmap(PluginCall call) {
-        if (ddn != null) {
+        if (cvr != null) {
             try {
                 JSObject response = new JSObject();
                 JSArray detectionResults = new JSArray();
-
+                String templateName = call.getString("template","DetectDocumentBoundaries_Default");
                 Class cls = Class.forName("com.dynamsoft.capacitor.dce.CameraPreviewPlugin");
                 Method m = cls.getMethod("getBitmap",null);
                 Bitmap bitmap = (Bitmap) m.invoke(null, null);
                 if (bitmap != null) {
-                    DetectedQuadResult[] results = ddn.detectQuad(bitmap);
+                    CapturedResult capturedResult = cvr.capture(bitmap,templateName);
+                    CapturedResultItem[] results = capturedResult.getItems();
                     if (results != null) {
-                        for (DetectedQuadResult result:results) {
-                            detectionResults.put(Utils.getMapFromDetectedQuadResult(result));
+                        for (CapturedResultItem result:results) {
+                            if (result instanceof DetectedQuadResultItem) {
+                                detectionResults.put(Utils.getMapFromDetectedQuadResult((DetectedQuadResultItem) result));
+                            }
                         }
                     }
                 }
                 response.put("results",detectionResults);
                 call.resolve(response);
-            } catch (DocumentNormalizerException e) {
-                e.printStackTrace();
-                call.reject(e.getMessage());
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                      InvocationTargetException e) {
                 e.printStackTrace();
@@ -133,14 +138,20 @@ public class DocumentNormalizerPlugin extends Plugin {
     public void normalize(PluginCall call) {
         JSObject quad = call.getObject("quad");
         String source = call.getString("source");
+        String templateName = call.getString("template","NormalizeDocument_Binary");
         source = source.replaceFirst("data:.*?;base64,","");
-        if (ddn != null) {
+        if (cvr != null) {
             try {
                 Point[] points = Utils.convertPoints(quad.getJSONArray("points"));
                 Quadrilateral quadrilateral = new Quadrilateral();
                 quadrilateral.points = points;
-                NormalizedImageResult result = ddn.normalize(Utils.base642Bitmap(source),quadrilateral);
-                Bitmap bm = result.image.toBitmap();
+                SimplifiedCaptureVisionSettings settings = cvr.getSimplifiedSettings(templateName);
+                settings.roi = quadrilateral;
+                settings.roiMeasuredInPercentage = false;
+                cvr.updateSettings(templateName,settings); //pass the polygon to the capture router
+                CapturedResult capturedResult = cvr.capture(Utils.base642Bitmap(source),templateName); //run normalization
+                NormalizedImageResultItem result = (NormalizedImageResultItem) capturedResult.getItems()[0];
+                Bitmap bm = result.getImageData().toBitmap();
                 JSObject response = new JSObject();
                 JSObject resultObject = new JSObject();
                 resultObject.put("data",Utils.bitmap2Base64(bm));
