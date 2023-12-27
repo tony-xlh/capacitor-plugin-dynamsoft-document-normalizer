@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.util.Log;
 
-
 import com.dynamsoft.core.basic_structures.CapturedResult;
 import com.dynamsoft.core.basic_structures.CapturedResultItem;
 import com.dynamsoft.core.basic_structures.Quadrilateral;
@@ -12,7 +11,6 @@ import com.dynamsoft.cvr.CaptureVisionRouter;
 import com.dynamsoft.cvr.CaptureVisionRouterException;
 import com.dynamsoft.cvr.SimplifiedCaptureVisionSettings;
 import com.dynamsoft.ddn.DetectedQuadResultItem;
-import com.dynamsoft.ddn.DocumentNormalizerException;
 import com.dynamsoft.ddn.NormalizedImageResultItem;
 import com.dynamsoft.license.LicenseManager;
 import com.getcapacitor.JSArray;
@@ -21,8 +19,6 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -108,7 +104,7 @@ public class DocumentNormalizerPlugin extends Plugin {
                 JSObject response = new JSObject();
                 JSArray detectionResults = new JSArray();
                 String templateName = call.getString("template","DetectDocumentBoundaries_Default");
-                Class cls = Class.forName("com.dynamsoft.capacitor.dce.CameraPreviewPlugin");
+                Class cls = Class.forName("com.tonyxlh.capacitor.camera.CameraPreviewPlugin");
                 Method m = cls.getMethod("getBitmap",null);
                 Bitmap bitmap = (Bitmap) m.invoke(null, null);
                 if (bitmap != null) {

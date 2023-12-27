@@ -8,8 +8,8 @@ project(':capacitor-filesystem').projectDir = new File('../node_modules/@capacit
 include ':capacitor-share'
 project(':capacitor-share').projectDir = new File('../node_modules/@capacitor/share/android')
 
-include ':capacitor-plugin-dynamsoft-camera-preview'
-project(':capacitor-plugin-dynamsoft-camera-preview').projectDir = new File('../node_modules/capacitor-plugin-dynamsoft-camera-preview/android')
+include ':capacitor-plugin-camera'
+project(':capacitor-plugin-camera').projectDir = new File('../node_modules/capacitor-plugin-camera/android')
 
 include ':capacitor-plugin-dynamsoft-document-normalizer'
 project(':capacitor-plugin-dynamsoft-document-normalizer').projectDir = new File('../../android')

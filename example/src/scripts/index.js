@@ -3,7 +3,7 @@ import { ScreenOrientation } from "@awesome-cordova-plugins/screen-orientation";
 import { Capacitor } from '@capacitor/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
-import { CameraPreview } from "capacitor-plugin-dynamsoft-camera-preview";
+import { CameraPreview } from "capacitor-plugin-camera";
 import { DocumentNormalizer,intersectionOverUnion } from "capacitor-plugin-dynamsoft-document-normalizer";
 import { jsPDF } from "jspdf";
 
@@ -209,6 +209,7 @@ async function captureAndDetect(){
       //let result = await CameraPreview.takeSnapshot({quality:100});
       //base64 = result.base64;
       //results = (await DocumentNormalizer.detect({source:base64})).results;
+      await CameraPreview.saveFrame();
       results = (await DocumentNormalizer.detectBitmap()).results;
     } else {
       let result = await CameraPreview.takeSnapshot2();
