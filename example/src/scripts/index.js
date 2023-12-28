@@ -11,8 +11,9 @@ console.log('webpack starterkit');
 
 let frameWidth;
 let frameHeight;
-let photoTaken = null;
-let photoTakenAsCanvas = null;
+let canvasForDetection = document.createElement("canvas");
+let canvasForFullFrame = document.createElement("canvas");
+let photoTakenForMobile;
 let detectionResult;
 let onPlayedListener;
 let onOrientationChangedListener;
@@ -181,8 +182,8 @@ async function toggleTorch(){
 }
 
 function startScanning(){
-  photoTaken = null;
-  photoTakenAsCanvas = null;
+  stopScanning();
+  photoTakenForMobile = null;
   previousResults = [];
   scanning = false;
   interval = setInterval(captureAndDetect,100);
@@ -197,41 +198,37 @@ async function captureAndDetect(){
   if (scanning === true) {
     return;
   }
-  if (photoTaken) {
+  if (photoTakenForMobile) {
     return;
   }
   let results = [];
   scanning = true;
-  let base64;
-  let canvas;
+  let scaleRatio = 1.0;
   try {
     if (Capacitor.isNativePlatform()) {
-      //let result = await CameraPreview.takeSnapshot({quality:100});
-      //base64 = result.base64;
-      //results = (await DocumentNormalizer.detect({source:base64})).results;
       await CameraPreview.saveFrame();
       results = (await DocumentNormalizer.detectBitmap()).results;
     } else {
-      let result = await CameraPreview.takeSnapshot2();
-      canvas = result.frame.toCanvas();
-      results = (await DocumentNormalizer.detect({source:canvas})).results;
+      let snapshotResult = await CameraPreview.takeSnapshot2({canvas:canvasForDetection,maxLength:1280});
+      scaleRatio = snapshotResult.scaleRatio;
+      results = (await DocumentNormalizer.detect({source:canvasForDetection})).results;
     }
-    drawOverlay(results);
+    drawOverlay(results,scaleRatio);
     let ifSteady = await checkIfSteady(results);
     if (ifSteady) {
-      if (!base64) {
-        if (Capacitor.isNativePlatform()) {
-          base64 = (await CameraPreview.takeSnapshot({quality:100})).base64;
-        }else{
-          base64 = canvas.toDataURL("image/jpeg");
+      detectionResult = previousResults[previousResults.length - 1];
+
+      if (Capacitor.isNativePlatform()) {
+        let base64 = (await CameraPreview.takeSnapshot({quality:100})).base64;
+        if (!base64.startsWith("data")) {
+          base64 = "data:image/jpeg;base64," + base64;
         }
-      }
-      if (canvas) {
-        photoTakenAsCanvas = canvas;
-      }
-      photoTaken = base64;
-      if (!photoTaken.startsWith("data")) {
-        photoTaken = "data:image/jpeg;base64," + photoTaken;
+        photoTakenForMobile = base64;
+      }else{
+        await CameraPreview.takeSnapshot2({canvas:canvasForFullFrame});
+        if (scaleRatio != 1.0) {
+          scaleResult(detectionResult,scaleRatio,scaleRatio);
+        }
       }
       stopScanning();
       displayPhotoAndShowConfirmation();
@@ -244,12 +241,24 @@ async function captureAndDetect(){
   console.log(results);
 }
 
-function drawOverlay(results){
+function scaleResult(result,scaleX,scaleY){
+  let location = result.location;
+  location.points[0].x = location.points[0].x/scaleX;
+  location.points[1].x = location.points[1].x/scaleX;
+  location.points[2].x = location.points[2].x/scaleX;
+  location.points[3].x = location.points[3].x/scaleX;
+  location.points[0].y = location.points[0].y/scaleY;
+  location.points[1].y = location.points[1].y/scaleY;
+  location.points[2].y = location.points[2].y/scaleY;
+  location.points[3].y = location.points[3].y/scaleY;
+}
+
+function drawOverlay(results,scaleRatio){
   let svg = document.getElementById("overlay");
   svg.innerHTML = "";
   results.forEach(result => {
     let polygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
-    polygon.setAttribute("points",getPointsData(result));
+    polygon.setAttribute("points",getPointsData(result,scaleRatio));
     polygon.setAttribute("stroke","green");
     polygon.setAttribute("stroke-width","1");
     polygon.setAttribute("fill","lime");
@@ -258,12 +267,12 @@ function drawOverlay(results){
   });
 }
 
-function getPointsData(result){
+function getPointsData(result,scaleRatio){
   let location = result.location;
-  let pointsData = location.points[0].x + "," + location.points[0].y + " ";
-  pointsData = pointsData + location.points[1].x + "," + location.points[1].y +" ";
-  pointsData = pointsData + location.points[2].x + "," + location.points[2].y +" ";
-  pointsData = pointsData + location.points[3].x + "," + location.points[3].y;
+  let pointsData = location.points[0].x/scaleRatio + "," + location.points[0].y/scaleRatio + " ";
+  pointsData = pointsData + location.points[1].x/scaleRatio + "," + location.points[1].y/scaleRatio +" ";
+  pointsData = pointsData + location.points[2].x/scaleRatio + "," + location.points[2].y/scaleRatio +" ";
+  pointsData = pointsData + location.points[3].x/scaleRatio + "," + location.points[3].y/scaleRatio;
   return pointsData;
 }
 
@@ -288,10 +297,13 @@ async function checkIfSteady(results) {
 }
 
 async function displayPhotoAndShowConfirmation(){
-  detectionResult = previousResults[previousResults.length - 1];
-  await normalizeImage();
-  document.getElementById("normalizedImage").style.display = "";
-  document.getElementById("confirmation").style.display = "";
+  try {
+    await normalizeImage();
+    document.getElementById("normalizedImage").style.display = "";
+    document.getElementById("confirmation").style.display = "";  
+  } catch (error) {
+    startScanning();
+  }
 }
 
 function steady(){
@@ -326,6 +338,7 @@ async function okay(){
 }
 
 async function exitScanner(){
+  stopScanning();
   await CameraPreview.stopCamera();
   toggleControlsDisplay(false);
 }
@@ -348,10 +361,10 @@ function retake(){
 async function normalizeImage() {
   console.log("normalize image");
   let source;
-  if (photoTakenAsCanvas) {
-    source = photoTakenAsCanvas;
+  if (Capacitor.isNativePlatform()){
+    source = photoTakenForMobile;
   }else{
-    source = photoTaken;
+    source = canvasForFullFrame;
   }
   let normalizationResult = (await DocumentNormalizer.normalize({source:source,quad:detectionResult.location,template:normalizationTemplate})).result.data;
   if (!normalizationResult.startsWith("data")) {
