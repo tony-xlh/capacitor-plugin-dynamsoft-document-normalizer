@@ -58,16 +58,14 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@awesome-cordova-plugins/screen-orientation": "^6.2.0",
     "@babel/polyfill": "^7.12.1",
     "@capacitor/android": "^5.0.0",
     "@capacitor/core": "^5.0.0",
     "@capacitor/filesystem": "^5.0.0",
     "@capacitor/ios": "^5.0.0",
     "@capacitor/share": "^5.0.0",
-    "capacitor-plugin-camera": "^1.0.0",
+    "capacitor-plugin-camera": "^1.1.0",
     "capacitor-plugin-dynamsoft-document-normalizer": "file:..",
-    "cordova-plugin-screen-orientation": "^3.0.2",
     "core-js": "^3.20.3",
     "jspdf": "^2.5.1",
     "rxjs": "^7.8.1"

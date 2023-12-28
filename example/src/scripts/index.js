@@ -1,5 +1,4 @@
 import '../styles/index.css';
-import { ScreenOrientation } from "@awesome-cordova-plugins/screen-orientation";
 import { Capacitor } from '@capacitor/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
@@ -16,6 +15,7 @@ let photoTaken = null;
 let photoTakenAsCanvas = null;
 let detectionResult;
 let onPlayedListener;
+let onOrientationChangedListener;
 let interval;
 let previousResults = [];
 let scanning = false;
@@ -56,14 +56,11 @@ async function initialize(){
   await DocumentNormalizer.initialize();
   await CameraPreview.initialize();
   
-  if (Capacitor.isNativePlatform()) {
-    ScreenOrientation.onChange().subscribe(() => {
-      updateViewBox(frameWidth,frameHeight);
-    });
-  }
-
   if (onPlayedListener) {
     await onPlayedListener.remove();
+  }
+  if (onOrientationChangedListener) {
+    await onOrientationChangedListener.remove();
   }
   onPlayedListener = await CameraPreview.addListener('onPlayed', async (res) => {
     console.log(res);
@@ -75,7 +72,10 @@ async function initialize(){
     frameHeight = height;
     updateViewBox(width,height);
   });
-  
+  onOrientationChangedListener = await CameraPreview.addListener('onOrientationChanged',async () => {
+    console.log("onOrientationChanged");
+    updateViewBox(frameWidth,frameHeight);
+  });
   await CameraPreview.requestCameraPermission();
   await loadCameras();
   loadResolutions();
@@ -83,10 +83,10 @@ async function initialize(){
   startBtn.disabled = "";
 }
 
-function updateViewBox(width, height){
+async function updateViewBox(width, height){
   if (Capacitor.isNativePlatform()) {
-    console.log(ScreenOrientation.type);
-    if (ScreenOrientation.type.toLowerCase().indexOf("portrait") != -1) {
+    let orientation = await CameraPreview.getOrientation();
+    if (orientation === "PORTRAIT") {
       console.log("switch width and height");
       let temp = width;
       width = height;
