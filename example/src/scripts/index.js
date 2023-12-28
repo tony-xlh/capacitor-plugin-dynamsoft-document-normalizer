@@ -86,7 +86,7 @@ async function initialize(){
 
 async function updateViewBox(width, height){
   if (Capacitor.isNativePlatform()) {
-    let orientation = await CameraPreview.getOrientation();
+    let orientation = (await CameraPreview.getOrientation()).orientation;
     if (orientation === "PORTRAIT") {
       console.log("switch width and height");
       let temp = width;

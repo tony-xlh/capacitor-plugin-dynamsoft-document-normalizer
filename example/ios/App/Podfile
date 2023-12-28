@@ -15,7 +15,6 @@ def capacitor_pods
   pod 'CapacitorShare', :path => '../../node_modules/@capacitor/share'
   pod 'CapacitorPluginCamera', :path => '../../node_modules/capacitor-plugin-camera'
   pod 'CapacitorPluginDynamsoftDocumentNormalizer', :path => '../../..'
-  pod 'CordovaPlugins', :path => '../capacitor-cordova-ios-plugins'
 end
 
 target 'App' do
