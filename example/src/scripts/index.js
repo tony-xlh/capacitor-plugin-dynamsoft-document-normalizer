@@ -410,7 +410,7 @@ async function normalizeImage() {
   }else{
     source = canvasForFullFrame;
   }
-  let normalizationResult = (await DocumentNormalizer.normalize({source:source,quad:detectionResult.location,template:normalizationTemplate})).result.base64;
+  let normalizationResult = (await DocumentNormalizer.normalize({source:source,quad:detectionResult.location,template:normalizationTemplate,includeBase64:true})).result.base64;
   if (!normalizationResult.startsWith("data")) {
     normalizationResult = "data:image/jpeg;base64," + normalizationResult;
   }
