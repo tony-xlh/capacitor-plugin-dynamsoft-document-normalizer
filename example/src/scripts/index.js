@@ -283,7 +283,7 @@ async function detectAndNormalize(){
 
 function loadBlobAsImage(blob){
   return new Promise((resolve) => {
-    let img = document.createElement("image");
+    let img = document.createElement("img");
     img.onload = function(){
       resolve(img);
     };
