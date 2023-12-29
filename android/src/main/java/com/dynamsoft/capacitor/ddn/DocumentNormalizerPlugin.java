@@ -20,8 +20,13 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Date;
 
 @CapacitorPlugin(name = "DocumentNormalizer")
 public class DocumentNormalizerPlugin extends Plugin {
@@ -147,10 +152,20 @@ public class DocumentNormalizerPlugin extends Plugin {
                 cvr.updateSettings(templateName,settings); //pass the polygon to the capture router
                 CapturedResult capturedResult = cvr.capture(Utils.base642Bitmap(source),templateName); //run normalization
                 NormalizedImageResultItem result = (NormalizedImageResultItem) capturedResult.getItems()[0];
-                Bitmap bm = result.getImageData().toBitmap();
                 JSObject response = new JSObject();
                 JSObject resultObject = new JSObject();
-                resultObject.put("data",Utils.bitmap2Base64(bm));
+                if (call.getBoolean("saveToFile",false)) {
+                    File dir = getContext().getExternalCacheDir();
+                    File file = new File(dir, new Date().getTime()+".jpg");
+                    try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                        outputStream.write( result.getImageData().bytes);
+                    }
+                    resultObject.put("path",file.getAbsolutePath());
+                }
+                if (call.getBoolean("includeBase64",false)) {
+                    Bitmap bm = result.getImageData().toBitmap();
+                    resultObject.put("base64",Utils.bitmap2Base64(bm));
+                }
                 response.put("result",resultObject);
                 call.resolve(response);
             }catch (Exception e) {
@@ -159,5 +174,62 @@ public class DocumentNormalizerPlugin extends Plugin {
         }else{
             call.reject("DDN not initialized");
         }
+    }
+
+    @PluginMethod
+    public void normalizeFile(PluginCall call) {
+        JSObject quad = call.getObject("quad");
+        String path = call.getString("path");
+        String templateName = call.getString("template","NormalizeDocument_Binary");
+        if (cvr != null) {
+            try {
+                Point[] points = Utils.convertPoints(quad.getJSONArray("points"));
+                Quadrilateral quadrilateral = new Quadrilateral();
+                quadrilateral.points = points;
+                SimplifiedCaptureVisionSettings settings = cvr.getSimplifiedSettings(templateName);
+                settings.roi = quadrilateral;
+                settings.roiMeasuredInPercentage = false;
+                cvr.updateSettings(templateName,settings); //pass the polygon to the capture router
+                CapturedResult capturedResult = cvr.capture(path,templateName); //run normalization
+                NormalizedImageResultItem result = (NormalizedImageResultItem) capturedResult.getItems()[0];
+                JSObject response = new JSObject();
+                JSObject resultObject = new JSObject();
+                Bitmap bm = null;
+                if (call.getBoolean("saveToFile",false)) {
+                    File dir = getContext().getExternalCacheDir();
+                    if (bm == null) {
+                         bm = result.getImageData().toBitmap();
+                    }
+                    resultObject.put("path",saveImage(bm, dir,new Date().getTime()+".jpg"));
+                }
+                if (call.getBoolean("includeBase64",false)) {
+                    if (bm == null) {
+                        bm = result.getImageData().toBitmap();
+                    }
+                    resultObject.put("base64",Utils.bitmap2Base64(bm));
+                }
+                response.put("result",resultObject);
+                call.resolve(response);
+            }catch (Exception e) {
+                call.reject(e.getMessage());
+            }
+        }else{
+            call.reject("DDN not initialized");
+        }
+    }
+    public static String saveImage(Bitmap bmp, File dir, String fileName) {
+        File file = new File(dir, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+            return file.getAbsolutePath();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

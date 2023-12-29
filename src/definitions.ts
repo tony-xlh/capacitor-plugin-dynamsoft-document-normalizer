@@ -16,7 +16,11 @@ export interface DocumentNormalizerPlugin {
   /**
   * Android and iOS only support base64 string. Pass a template name to specify the template.
   */
-  normalize(options:{source:string | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral, template?:string}): Promise<{result:NormalizedImageResult}>;
+  normalize(options:{source:string | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral, template?:string, saveToFile?:boolean, includeBase64?:boolean}): Promise<{result:NormalizedImageResult}>;
+  /**
+  * Android and iOS only. Pass a template name to specify the template.
+  */
+  normalizeFile(options:{path:string, quad:Quadrilateral, template?:string, saveToFile?:boolean, includeBase64?:boolean}): Promise<{result:NormalizedImageResult}>;
   /**
   * Web Only
   */
@@ -24,5 +28,6 @@ export interface DocumentNormalizerPlugin {
 }
 
 export interface NormalizedImageResult {
-  data: string;
+  base64?: string;
+  path?: string;
 }

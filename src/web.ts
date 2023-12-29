@@ -67,7 +67,11 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
     throw new Error('Method not implemented.');
   }
 
-  async normalize(options: { source: string | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral,template?:string}): Promise<{result:NormalizedImageResult}> {
+  normalizeFile(_options:{path:string, quad:Quadrilateral, template?:string, saveToFile?:boolean, includeBase64?:boolean}): Promise<{result:NormalizedImageResult}>{
+    throw new Error('Method not implemented.');
+  }
+
+  async normalize(options: { source: string | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral,template?:string, saveToFile?:boolean, includeBase64?:boolean}): Promise<{result:NormalizedImageResult}> {
     if (this.cvr) {
       let templateName = options.template ?? "NormalizeDocument_Binary";
       let settings = await this.cvr.getSimplifiedSettings(templateName);
@@ -79,11 +83,15 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
       let normalizedImagesResult:CapturedResult = await this.cvr.capture(options.source,templateName);
       let normalizedImageResultItem:NormalizedImageResultItem = (normalizedImagesResult.items[0] as NormalizedImageResultItem);
       let normalizedResult:NormalizedImageResult = {
-        data:normalizedImageResultItem.toCanvas().toDataURL()
+        base64:this.removeDataURLHead(normalizedImageResultItem.toCanvas().toDataURL("image/jpeg"))
       }
       return {result:normalizedResult};
     } else {
       throw new Error("DDN not initialized.");
     }
+  }
+
+  removeDataURLHead(dataURL:string){
+    return dataURL.substring(dataURL.indexOf(",")+1,dataURL.length);
   }
 }
