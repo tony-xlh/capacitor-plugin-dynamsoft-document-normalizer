@@ -209,7 +209,6 @@ public class DocumentNormalizerPlugin extends Plugin {
                 }else{
                     capturedResult = cvr.capture(path,templateName); //run normalization
                 }
-                Log.d("DDN",capturedResult.getItems().toString());
                 NormalizedImageResultItem result = (NormalizedImageResultItem) capturedResult.getItems()[0];
                 JSObject response = new JSObject();
                 JSObject resultObject = new JSObject();

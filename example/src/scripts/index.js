@@ -267,7 +267,12 @@ async function captureAndDetect(){
 }
 
 async function detectAndNormalize(){
-  let normalizationResult = (await DocumentNormalizer.detectAndNormalize({source:detectAndNormalizationSource,includeBase64:true,template:detectAndNormalizationTemplate})).result.base64;
+  let normalizationResult;
+  if (Capacitor.isNativePlatform()){
+    normalizationResult = (await DocumentNormalizer.detectAndNormalize({path:detectAndNormalizationSource,includeBase64:true,template:detectAndNormalizationTemplate})).result.base64;
+  }else{
+    normalizationResult = (await DocumentNormalizer.detectAndNormalize({source:detectAndNormalizationSource,includeBase64:true,template:detectAndNormalizationTemplate})).result.base64;
+  }
   console.log("normalizationResult");
   console.log(normalizationResult);
   if (!normalizationResult.startsWith("data")) {
