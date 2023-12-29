@@ -76,14 +76,22 @@ public class DocumentNormalizerPlugin extends Plugin {
 
     @PluginMethod
     public void detect(PluginCall call) {
-        String source = call.getString("source");
+        String path = call.getString("path","");
+        String source = call.getString("source","");
         String templateName = call.getString("template","DetectDocumentBoundaries_Default");
-        source = source.replaceFirst("data:.*?;base64,","");
+        if (path.equals("")) {
+            source = source.replaceFirst("data:.*?;base64,","");
+        }
         if (cvr != null) {
             try {
                 JSObject response = new JSObject();
                 JSArray detectionResults = new JSArray();
-                CapturedResult capturedResult = cvr.capture(Utils.base642Bitmap(source),templateName);
+                CapturedResult capturedResult;
+                if (path.equals("")) {
+                    capturedResult = cvr.capture(Utils.base642Bitmap(source),templateName);
+                }else{
+                    capturedResult = cvr.capture(Utils.base642Bitmap(path),templateName);
+                }
                 CapturedResultItem[] results = capturedResult.getItems();
                 if (results != null) {
                     for (CapturedResultItem result:results) {
@@ -102,6 +110,7 @@ public class DocumentNormalizerPlugin extends Plugin {
             call.reject("DDN not initialized");
         }
     }
+
     @PluginMethod
     public void detectBitmap(PluginCall call) {
         if (cvr != null) {
@@ -138,9 +147,12 @@ public class DocumentNormalizerPlugin extends Plugin {
     @PluginMethod
     public void normalize(PluginCall call) {
         JSObject quad = call.getObject("quad");
-        String source = call.getString("source");
+        String source = call.getString("source","");
+        String path = call.getString("path","");
         String templateName = call.getString("template","NormalizeDocument_Binary");
-        source = source.replaceFirst("data:.*?;base64,","");
+        if (path.equals("")) {
+            source = source.replaceFirst("data:.*?;base64,","");
+        }
         if (cvr != null) {
             try {
                 Point[] points = Utils.convertPoints(quad.getJSONArray("points"));
@@ -150,7 +162,12 @@ public class DocumentNormalizerPlugin extends Plugin {
                 settings.roi = quadrilateral;
                 settings.roiMeasuredInPercentage = false;
                 cvr.updateSettings(templateName,settings); //pass the polygon to the capture router
-                CapturedResult capturedResult = cvr.capture(Utils.base642Bitmap(source),templateName); //run normalization
+                CapturedResult capturedResult;
+                if (path.equals("")) {
+                    capturedResult = cvr.capture(Utils.base642Bitmap(source),templateName); //run normalization
+                }else{
+                    capturedResult = cvr.capture(path,templateName); //run normalization
+                }
                 NormalizedImageResultItem result = (NormalizedImageResultItem) capturedResult.getItems()[0];
                 JSObject response = new JSObject();
                 JSObject resultObject = new JSObject();
@@ -176,47 +193,6 @@ public class DocumentNormalizerPlugin extends Plugin {
         }
     }
 
-    @PluginMethod
-    public void normalizeFile(PluginCall call) {
-        JSObject quad = call.getObject("quad");
-        String path = call.getString("path");
-        String templateName = call.getString("template","NormalizeDocument_Binary");
-        if (cvr != null) {
-            try {
-                Point[] points = Utils.convertPoints(quad.getJSONArray("points"));
-                Quadrilateral quadrilateral = new Quadrilateral();
-                quadrilateral.points = points;
-                SimplifiedCaptureVisionSettings settings = cvr.getSimplifiedSettings(templateName);
-                settings.roi = quadrilateral;
-                settings.roiMeasuredInPercentage = false;
-                cvr.updateSettings(templateName,settings); //pass the polygon to the capture router
-                CapturedResult capturedResult = cvr.capture(path,templateName); //run normalization
-                NormalizedImageResultItem result = (NormalizedImageResultItem) capturedResult.getItems()[0];
-                JSObject response = new JSObject();
-                JSObject resultObject = new JSObject();
-                Bitmap bm = null;
-                if (call.getBoolean("saveToFile",false)) {
-                    File dir = getContext().getExternalCacheDir();
-                    if (bm == null) {
-                         bm = result.getImageData().toBitmap();
-                    }
-                    resultObject.put("path",saveImage(bm, dir,new Date().getTime()+".jpg"));
-                }
-                if (call.getBoolean("includeBase64",false)) {
-                    if (bm == null) {
-                        bm = result.getImageData().toBitmap();
-                    }
-                    resultObject.put("base64",Utils.bitmap2Base64(bm));
-                }
-                response.put("result",resultObject);
-                call.resolve(response);
-            }catch (Exception e) {
-                call.reject(e.getMessage());
-            }
-        }else{
-            call.reject("DDN not initialized");
-        }
-    }
     public static String saveImage(Bitmap bmp, File dir, String fileName) {
         File file = new File(dir, fileName);
         try {

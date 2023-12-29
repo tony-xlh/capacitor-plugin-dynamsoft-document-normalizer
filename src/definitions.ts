@@ -6,21 +6,21 @@ export interface DocumentNormalizerPlugin {
   initLicense(options: {license: string}): Promise<void>;
   initRuntimeSettingsFromString(options: {template:string}): Promise<void>;
   /**
-  * Android and iOS only support base64 string. Pass a template name to specify the template.
+  * source: Android and iOS only support base64 string.
+  * path: for Android and iOS.
+  * template: pass a template name to specify the template
   */
-  detect(options:{source:string | HTMLImageElement | HTMLCanvasElement,template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
+  detect(options:{path?:string, source?:string | HTMLImageElement | HTMLCanvasElement,template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
   /**
   * Android and iOS only method which directly reads camera frames from capacitor-plugin-dynamsoft-camera-preview.  Pass a template name to specify the template.
   */
   detectBitmap(options:{template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
   /**
-  * Android and iOS only support base64 string. Pass a template name to specify the template.
+  * source: Android and iOS only support base64 string.
+  * path: for Android and iOS.
+  * template: pass a template name to specify the template
   */
-  normalize(options:{source:string | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral, template?:string, saveToFile?:boolean, includeBase64?:boolean}): Promise<{result:NormalizedImageResult}>;
-  /**
-  * Android and iOS only. Pass a template name to specify the template.
-  */
-  normalizeFile(options:{path:string, quad:Quadrilateral, template?:string, saveToFile?:boolean, includeBase64?:boolean}): Promise<{result:NormalizedImageResult}>;
+  normalize(options:{path?:string,source?:string | HTMLImageElement | HTMLCanvasElement, quad:Quadrilateral, template?:string, saveToFile?:boolean, includeBase64?:boolean}): Promise<{result:NormalizedImageResult}>;
   /**
   * Web Only
   */

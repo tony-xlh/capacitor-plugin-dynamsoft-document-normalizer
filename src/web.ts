@@ -6,6 +6,7 @@ import { CapturedResult, Quadrilateral } from "dynamsoft-core";
 import type { DocumentNormalizerPlugin, NormalizedImageResult } from './definitions';
 
 export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormalizerPlugin {
+  
   private cvr:CaptureVisionRouter | undefined;
   private engineResourcesPath: string = "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.11/dist/";
   async initialize(): Promise<void> {
@@ -61,6 +62,10 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
     } else {
       throw new Error("DDN not initialized.");
     }
+  }
+
+  detectFile(_options: { path: string; template?: string | undefined; }): Promise<{ results: DetectedQuadResultItem[]; }> {
+    throw new Error('Method not implemented.');
   }
 
   detectBitmap(): Promise<{ results: DetectedQuadResultItem[]; }> {
