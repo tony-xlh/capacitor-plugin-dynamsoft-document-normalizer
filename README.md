@@ -33,6 +33,7 @@ npx cap sync
 * [`detect(...)`](#detect)
 * [`detectBitmap(...)`](#detectbitmap)
 * [`normalize(...)`](#normalize)
+* [`detectAndNormalize(...)`](#detectandnormalize)
 * [`setEngineResourcesPath(...)`](#setengineresourcespath)
 * [Interfaces](#interfaces)
 
@@ -79,14 +80,16 @@ initRuntimeSettingsFromString(options: { template: string; }) => Promise<void>
 ### detect(...)
 
 ```typescript
-detect(options: { source: string | HTMLImageElement | HTMLCanvasElement; template?: string; }) => Promise<{ results: DetectedQuadResultItem[]; }>
+detect(options: { path?: string; source?: string | HTMLImageElement | HTMLCanvasElement; template?: string; }) => Promise<{ results: DetectedQuadResultItem[]; }>
 ```
 
-Android and iOS only support base64 string. Pass a template name to specify the template.
+source: Android and iOS only support base64 string.
+path: for Android and iOS.
+template: pass a template name to specify the template
 
-| Param         | Type                                             |
-| ------------- | ------------------------------------------------ |
-| **`options`** | <code>{ source: any; template?: string; }</code> |
+| Param         | Type                                                             |
+| ------------- | ---------------------------------------------------------------- |
+| **`options`** | <code>{ path?: string; source?: any; template?: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ results: DetectedQuadResultItem[]; }&gt;</code>
 
@@ -113,14 +116,35 @@ Android and iOS only method which directly reads camera frames from capacitor-pl
 ### normalize(...)
 
 ```typescript
-normalize(options: { source: string | HTMLImageElement | HTMLCanvasElement; quad: Quadrilateral; template?: string; }) => Promise<{ result: NormalizedImageResult; }>
+normalize(options: { path?: string; source?: string | HTMLImageElement | HTMLCanvasElement; quad: Quadrilateral; template?: string; saveToFile?: boolean; includeBase64?: boolean; }) => Promise<{ result: NormalizedImageResult; }>
 ```
 
-Android and iOS only support base64 string. Pass a template name to specify the template.
+source: Android and iOS only support base64 string.
+path: for Android and iOS.
+template: pass a template name to specify the template
 
-| Param         | Type                                                                                               |
-| ------------- | -------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ source: any; quad: <a href="#quadrilateral">Quadrilateral</a>; template?: string; }</code> |
+| Param         | Type                                                                                                                                                              |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ path?: string; source?: any; quad: <a href="#quadrilateral">Quadrilateral</a>; template?: string; saveToFile?: boolean; includeBase64?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ result: <a href="#normalizedimageresult">NormalizedImageResult</a>; }&gt;</code>
+
+--------------------
+
+
+### detectAndNormalize(...)
+
+```typescript
+detectAndNormalize(options: { path?: string; source?: string | HTMLImageElement | HTMLCanvasElement; template?: string; saveToFile?: boolean; includeBase64?: boolean; }) => Promise<{ result: NormalizedImageResult; }>
+```
+
+source: Android and iOS only support base64 string.
+path: for Android and iOS.
+template: pass a template name to specify the template
+
+| Param         | Type                                                                                                            |
+| ------------- | --------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ path?: string; source?: any; template?: string; saveToFile?: boolean; includeBase64?: boolean; }</code> |
 
 **Returns:** <code>Promise&lt;{ result: <a href="#normalizedimageresult">NormalizedImageResult</a>; }&gt;</code>
 
@@ -185,8 +209,9 @@ Web Only
 
 #### NormalizedImageResult
 
-| Prop       | Type                |
-| ---------- | ------------------- |
-| **`data`** | <code>string</code> |
+| Prop         | Type                |
+| ------------ | ------------------- |
+| **`base64`** | <code>string</code> |
+| **`path`**   | <code>string</code> |
 
 </docgen-api>

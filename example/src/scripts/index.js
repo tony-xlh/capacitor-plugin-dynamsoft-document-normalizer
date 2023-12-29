@@ -13,6 +13,7 @@ let frameWidth;
 let frameHeight;
 let canvasForDetection = document.createElement("canvas");
 let canvasForFullFrame = document.createElement("canvas");
+let detectAndNormalizationSource;
 let photoTakenForMobile;
 let detectionResult;
 let onPlayedListener;
@@ -26,6 +27,7 @@ let okayBtn = document.getElementById("okayBtn");
 let retakeBtn = document.getElementById("retakeBtn");
 let toggleTorchBtn = document.getElementById("toggleTorchButton");
 let normalizationTemplate = "NormalizeDocument_Binary";
+let detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Binary";
 startBtn.addEventListener("click",startCamera);
 okayBtn.addEventListener("click",okay);
 retakeBtn.addEventListener("click",retake);
@@ -216,22 +218,45 @@ async function captureAndDetect(){
     drawOverlay(results,scaleRatio);
     let ifSteady = await checkIfSteady(results);
     if (ifSteady) {
-      detectionResult = previousResults[previousResults.length - 1];
-
-      if (Capacitor.isNativePlatform()) {
-        let base64 = (await CameraPreview.takeSnapshot({quality:100})).base64;
-        if (!base64.startsWith("data")) {
-          base64 = "data:image/jpeg;base64," + base64;
-        }
-        photoTakenForMobile = base64;
-      }else{
-        await CameraPreview.takeSnapshot2({canvas:canvasForFullFrame});
-        if (scaleRatio != 1.0) {
-          scaleResult(detectionResult,scaleRatio,scaleRatio);
-        }
-      }
       stopScanning();
+      if (document.getElementById("hires").checked) {
+        if (Capacitor.isNativePlatform()) {
+          let path = (await CameraPreview.takePhoto()).path;
+          detectAndNormalizationSource = path;
+        }else{
+          let photo = await CameraPreview.takePhoto();
+          if (photo.blob) {
+            let img = await loadBlobAsImage(photo.blob);
+            detectAndNormalizationSource = img;
+          }else if (photo.base64) {
+            let dataURL = photo.base64;
+            if (!dataURL.startsWith("data")) {
+              dataURL = "data:image/jpeg;base64," + dataURL;
+            }
+            detectAndNormalizationSource = dataURL;
+          }
+        }
+        await detectAndNormalize();
+      }else{
+        detectionResult = previousResults[previousResults.length - 1];
+        if (Capacitor.isNativePlatform()) {
+          let base64 = (await CameraPreview.takeSnapshot({quality:100})).base64;
+          if (!base64.startsWith("data")) {
+            base64 = "data:image/jpeg;base64," + base64;
+          }
+          photoTakenForMobile = base64;
+        }else{
+          await CameraPreview.takeSnapshot2({canvas:canvasForFullFrame});
+          if (scaleRatio != 1.0) {
+            scaleResult(detectionResult,scaleRatio,scaleRatio);
+          }
+        }
+        await normalizeImage();
+      }
+      
       displayPhotoAndShowConfirmation();
+      
+      
     }
     
   } catch (error) {
@@ -239,6 +264,26 @@ async function captureAndDetect(){
   }
   scanning = false;
   console.log(results);
+}
+
+async function detectAndNormalize(){
+  let normalizationResult = (await DocumentNormalizer.detectAndNormalize({source:detectAndNormalizationSource,includeBase64:true,template:detectAndNormalizationTemplate})).result.base64;
+  console.log("normalizationResult");
+  console.log(normalizationResult);
+  if (!normalizationResult.startsWith("data")) {
+    normalizationResult = "data:image/jpeg;base64," + normalizationResult;
+  }
+  document.getElementById("normalizedImage").src = normalizationResult;
+}
+
+function loadBlobAsImage(blob){
+  return new Promise((resolve) => {
+    let img = document.createElement("image");
+    img.onload = function(){
+      resolve(img);
+    };
+    img.src = URL.createObjectURL(blob);
+  });
 }
 
 function scaleResult(result,scaleX,scaleY){
@@ -298,7 +343,6 @@ async function checkIfSteady(results) {
 
 async function displayPhotoAndShowConfirmation(){
   try {
-    await normalizeImage();
     document.getElementById("normalizedImage").style.display = "";
     document.getElementById("confirmation").style.display = "";  
   } catch (error) {
@@ -366,7 +410,7 @@ async function normalizeImage() {
   }else{
     source = canvasForFullFrame;
   }
-  let normalizationResult = (await DocumentNormalizer.normalize({source:source,quad:detectionResult.location,template:normalizationTemplate})).result.data;
+  let normalizationResult = (await DocumentNormalizer.normalize({source:source,quad:detectionResult.location,template:normalizationTemplate})).result.base64;
   if (!normalizationResult.startsWith("data")) {
     normalizationResult = "data:image/jpeg;base64," + normalizationResult;
   }
@@ -378,13 +422,20 @@ function onColorModeChange() {
   console.log(selectedIndex);
   if (selectedIndex === 0) {
     normalizationTemplate = "NormalizeDocument_Binary";
+    detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Binary";
   }else if (selectedIndex === 1) {
     normalizationTemplate = "NormalizeDocument_Gray";
+    detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Gray";
   }else {
     normalizationTemplate = "NormalizeDocument_Color";
+    detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Color";
   }
   console.log("update settings done");
-  normalizeImage();
+  if (document.getElementById("hires").checked) {
+    detectAndNormalize();
+  }else{
+    normalizeImage();
+  }
 }
 
 async function saveAsPDF(){

@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>webpack starterkit</title>
   <meta name="description" content="A light foundation for your next frontend project based on webpack.">
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>eruda.init();</script>
+  <!--<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>-->
   <style>
     #toggleTorchButton {
       bottom: 0;
@@ -97,9 +97,14 @@
   <div class="home">
     <h1>Document Scanner</h1>
     <button id="startBtn">Start Scanning</button>
+    <br/>
     <label for="continuous">
       Continuous Scan
       <input type="checkbox" id="continuous"/>
+    </label>
+    <label for="hires">
+      Hi-Res
+      <input type="checkbox" id="hires"/>
     </label>
     <div style="margin-top:1em;">
       Scanned Documents
