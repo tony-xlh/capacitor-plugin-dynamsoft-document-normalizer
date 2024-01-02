@@ -11,4 +11,5 @@ CAP_PLUGIN(DocumentNormalizerPlugin, "DocumentNormalizer",
            CAP_PLUGIN_METHOD(detect, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(detectBitmap, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(normalize, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(detectAndNormalize, CAPPluginReturnPromise);
 )
