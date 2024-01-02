@@ -12,7 +12,7 @@ export interface DocumentNormalizerPlugin {
   */
   detect(options:{path?:string, source?:string | HTMLImageElement | HTMLCanvasElement,template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
   /**
-  * Android and iOS only method which directly reads camera frames from capacitor-plugin-dynamsoft-camera-preview.  Pass a template name to specify the template.
+  * Android and iOS only method which directly reads camera frames from capacitor-plugin-camera.  Pass a template name to specify the template.
   */
   detectBitmap(options:{className?:string,methodName?:string,template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
   /**
