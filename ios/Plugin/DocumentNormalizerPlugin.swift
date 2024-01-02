@@ -16,6 +16,7 @@ public class DocumentNormalizerPlugin: CAPPlugin, LicenseVerificationListener   
     @objc func initialize(_ call: CAPPluginCall) {
         if cvr == nil {
             cvr = CaptureVisionRouter()
+            loadTemplate()
         }
         call.resolve()
     }
@@ -102,6 +103,7 @@ public class DocumentNormalizerPlugin: CAPPlugin, LicenseVerificationListener   
     @objc func normalize(_ call: CAPPluginCall) {
 
         var ret = PluginCallResultData()
+        var result = NSMutableDictionary()
         let template = call.getString("template") ?? "NormalizeDocument_Binary"
         let saveToFile = call.getBool("saveToFile", false)
         let includeBase64 = call.getBool("includeBase64", false)
@@ -131,26 +133,28 @@ public class DocumentNormalizerPlugin: CAPPlugin, LicenseVerificationListener   
                 let normalizedUIImage = try? normalizedResult.imageData?.toUIImage()
                 if includeBase64 {
                     let normalizedResultAsBase64 = Utils.getBase64FromImage(normalizedUIImage!)
-                    ret["base64"] = normalizedResultAsBase64
+                    result["base64"] = normalizedResultAsBase64
                 }
                 if saveToFile {
                     let url = FileManager.default.temporaryDirectory
                         .appendingPathComponent(UUID().uuidString)
                         .appendingPathExtension("jpeg")
                     try? normalizedUIImage?.jpegData(compressionQuality: 1.0)?.write(to: url)
-                    ret["path"] = url.absoluteString
+                    result["path"] = url.path
                 }
             } else {
-                call.reject("Normalization failed")
+                call.reject(capturedResult.errorMessage ?? "Normalization failed")
             }
         }else {
-            call.reject("Normalization failed")
+            call.reject(capturedResult.errorMessage ?? "Normalization failed")
         }
+        ret["result"] = result
         call.resolve(ret)
     }
     
     @objc func detectAndNormalize(_ call: CAPPluginCall) {
         var ret = PluginCallResultData()
+        var result = NSMutableDictionary()
         let template = call.getString("template") ?? "DetectAndNormalizeDocument_Color"
         let saveToFile = call.getBool("saveToFile", false)
         let includeBase64 = call.getBool("includeBase64", false)
@@ -172,21 +176,22 @@ public class DocumentNormalizerPlugin: CAPPlugin, LicenseVerificationListener   
                 let normalizedUIImage = try? normalizedResult.imageData?.toUIImage()
                 if includeBase64 {
                     let normalizedResultAsBase64 = Utils.getBase64FromImage(normalizedUIImage!)
-                    ret["base64"] = normalizedResultAsBase64
+                    result["base64"] = normalizedResultAsBase64
                 }
                 if saveToFile {
                     let url = FileManager.default.temporaryDirectory
                         .appendingPathComponent(UUID().uuidString)
                         .appendingPathExtension("jpeg")
                     try? normalizedUIImage?.jpegData(compressionQuality: 1.0)?.write(to: url)
-                    ret["path"] = url.absoluteString
+                    result["path"] = url.path
                 }
             } else {
-                call.reject("Normalization failed")
+                call.reject(capturedResult.errorMessage ?? "Normalization failed")
             }
         }else {
-            call.reject("Normalization failed")
+            call.reject(capturedResult.errorMessage ?? "Normalization failed")
         }
+        ret["result"] = result
         call.resolve(ret)
     }
     
