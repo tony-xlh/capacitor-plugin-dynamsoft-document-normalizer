@@ -118,8 +118,10 @@ public class DocumentNormalizerPlugin extends Plugin {
                 JSObject response = new JSObject();
                 JSArray detectionResults = new JSArray();
                 String templateName = call.getString("template","DetectDocumentBoundaries_Default");
-                Class cls = Class.forName("com.tonyxlh.capacitor.camera.CameraPreviewPlugin");
-                Method m = cls.getMethod("getBitmap",null);
+                String className = call.getString("className","com.tonyxlh.capacitor.camera.CameraPreviewPlugin");
+                String methodName = call.getString("methodName","getBitmap");
+                Class cls = Class.forName(className);
+                Method m = cls.getMethod(methodName,null);
                 Bitmap bitmap = (Bitmap) m.invoke(null, null);
                 if (bitmap != null) {
                     CapturedResult capturedResult = cvr.capture(bitmap,templateName);
