@@ -99,14 +99,14 @@ template: pass a template name to specify the template
 ### detectBitmap(...)
 
 ```typescript
-detectBitmap(options: { template?: string; }) => Promise<{ results: DetectedQuadResultItem[]; }>
+detectBitmap(options: { className?: string; methodName?: string; template?: string; }) => Promise<{ results: DetectedQuadResultItem[]; }>
 ```
 
 Android and iOS only method which directly reads camera frames from capacitor-plugin-dynamsoft-camera-preview.  Pass a template name to specify the template.
 
-| Param         | Type                                |
-| ------------- | ----------------------------------- |
-| **`options`** | <code>{ template?: string; }</code> |
+| Param         | Type                                                                         |
+| ------------- | ---------------------------------------------------------------------------- |
+| **`options`** | <code>{ className?: string; methodName?: string; template?: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ results: DetectedQuadResultItem[]; }&gt;</code>
 

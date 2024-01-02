@@ -14,7 +14,7 @@ export interface DocumentNormalizerPlugin {
   /**
   * Android and iOS only method which directly reads camera frames from capacitor-plugin-dynamsoft-camera-preview.  Pass a template name to specify the template.
   */
-  detectBitmap(options:{template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
+  detectBitmap(options:{className?:string,methodName?:string,template?:string}): Promise<{results:DetectedQuadResultItem[]}>;
   /**
   * source: Android and iOS only support base64 string.
   * path: for Android and iOS.

@@ -86,7 +86,9 @@ public class DocumentNormalizerPlugin: CAPPlugin, LicenseVerificationListener   
     @objc func detectBitmap(_ call: CAPPluginCall) {
         let template = call.getString("template") ?? "DetectDocumentBoundaries_Default"
         let interop = Interoperator()
-        let image = interop.getUIImage()
+        let className = call.getString("className") ?? "CameraPreviewPlugin"
+        let methodName = call.getString("methodName") ?? "getBitmap"
+        let image = interop.getUIImage(className,methodName: methodName)
         var returned_results: [Any] = []
         if image != nil {
             let capturedResult = cvr.captureFromImage(image!, templateName: template)
