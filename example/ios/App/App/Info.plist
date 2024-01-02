@@ -46,6 +46,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-    <string>For document scanning</string>
+	<string>For document scanning</string>
 </dict>
 </plist>
