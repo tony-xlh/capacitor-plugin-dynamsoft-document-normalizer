@@ -13,6 +13,7 @@ import com.dynamsoft.cvr.SimplifiedCaptureVisionSettings;
 import com.dynamsoft.ddn.DetectedQuadResultItem;
 import com.dynamsoft.ddn.NormalizedImageResultItem;
 import com.dynamsoft.license.LicenseManager;
+import com.dynamsoft.utility.ImageManager;
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -173,12 +174,11 @@ public class DocumentNormalizerPlugin extends Plugin {
                 NormalizedImageResultItem result = (NormalizedImageResultItem) capturedResult.getItems()[0];
                 JSObject response = new JSObject();
                 JSObject resultObject = new JSObject();
+
                 if (call.getBoolean("saveToFile",false)) {
                     File dir = getContext().getExternalCacheDir();
-                    File file = new File(dir, new Date().getTime()+".jpg");
-                    try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                        outputStream.write( result.getImageData().bytes);
-                    }
+                    File file = new File(dir,new Date().getTime()+".jpg");
+                    new ImageManager().saveToFile(result.getImageData(),file.getAbsolutePath(),true);
                     resultObject.put("path",file.getAbsolutePath());
                 }
                 if (call.getBoolean("includeBase64",false)) {
@@ -217,9 +217,7 @@ public class DocumentNormalizerPlugin extends Plugin {
                 if (call.getBoolean("saveToFile",false)) {
                     File dir = getContext().getExternalCacheDir();
                     File file = new File(dir, new Date().getTime()+".jpg");
-                    try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                        outputStream.write( result.getImageData().bytes);
-                    }
+                    new ImageManager().saveToFile(result.getImageData(),file.getAbsolutePath(),true);
                     resultObject.put("path",file.getAbsolutePath());
                 }
                 if (call.getBoolean("includeBase64",false)) {

@@ -15,6 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Utils {
     public static Bitmap base642Bitmap(String base64) {
@@ -58,5 +62,14 @@ public class Utils {
         }
         map.put("points",points);
         return map;
+    }
+
+    public static String saveImage(Bitmap bmp, File dir, String fileName) throws IOException {
+        File file = new File(dir, fileName);
+        FileOutputStream fos = new FileOutputStream(file);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+        fos.flush();
+        fos.close();
+        return file.getAbsolutePath();
     }
 }
