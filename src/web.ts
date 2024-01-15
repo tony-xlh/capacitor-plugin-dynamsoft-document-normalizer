@@ -61,8 +61,6 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
   async detect(options: { source: string | HTMLImageElement | HTMLCanvasElement, template?:string}): Promise<{results:DetectedQuadResultItem[]}> {
     if (this.cvr) {
       let templateName = options.template ?? "DetectDocumentBoundaries_Default";
-      console.log(options.source);
-      console.log(templateName);
       let result:CapturedResult = await this.cvr.capture(options.source,templateName);
       let results:DetectedQuadResultItem[] = [];
       for (let index = 0; index < result.items.length; index++) {
@@ -110,12 +108,8 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
   async detectAndNormalize(options: { path?: string | undefined; source?: string | HTMLImageElement | HTMLCanvasElement | undefined; template?: string | undefined; saveToFile?: boolean | undefined; includeBase64?: boolean | undefined; }): Promise<{ result: NormalizedImageResult; }> {
     if (this.cvr) {
       if (options.source) {
-        console.log("detectAndNormalize");
-        console.log(options);
-
         let templateName = options.template ?? "DetectAndNormalizeDocument_Color";
         let normalizedImagesResult:CapturedResult = await this.cvr.capture(options.source,templateName);
-        console.log(normalizedImagesResult);
         let normalizedImageResultItem:NormalizedImageResultItem = (normalizedImagesResult.items[0] as NormalizedImageResultItem);
         let normalizedResult:NormalizedImageResult = {
           base64:this.removeDataURLHead(normalizedImageResultItem.toCanvas().toDataURL("image/jpeg"))
