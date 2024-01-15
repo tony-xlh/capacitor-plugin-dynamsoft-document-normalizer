@@ -34,7 +34,7 @@ npx cap sync
 * [`detectBitmap(...)`](#detectbitmap)
 * [`normalize(...)`](#normalize)
 * [`detectAndNormalize(...)`](#detectandnormalize)
-* [`setEngineResourcesPath(...)`](#setengineresourcespath)
+* [`setEngineResourcePaths(...)`](#setengineresourcepaths)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -151,17 +151,17 @@ template: pass a template name to specify the template
 --------------------
 
 
-### setEngineResourcesPath(...)
+### setEngineResourcePaths(...)
 
 ```typescript
-setEngineResourcesPath(options: { path: string; }) => Promise<void>
+setEngineResourcePaths(options: { paths: any; }) => Promise<void>
 ```
 
 Web Only
 
-| Param         | Type                           |
-| ------------- | ------------------------------ |
-| **`options`** | <code>{ path: string; }</code> |
+| Param         | Type                         |
+| ------------- | ---------------------------- |
+| **`options`** | <code>{ paths: any; }</code> |
 
 --------------------
 
@@ -179,13 +179,9 @@ Web Only
 
 #### Quadrilateral
 
-| Prop                  | Type                                                                                |
-| --------------------- | ----------------------------------------------------------------------------------- |
-| **`points`**          | <code>[Point, <a href="#point">Point</a>, <a href="#point">Point</a>, Point]</code> |
-| **`contains`**        | <code>((point: <a href="#point">Point</a>) =&gt; boolean)</code>                    |
-| **`getBoundingRect`** | <code>(() =&gt; <a href="#dsrect">DSRect</a>)</code>                                |
-| **`getArea`**         | <code>(() =&gt; number)</code>                                                      |
-| **`toString`**        | <code>(() =&gt; string)</code>                                                      |
+| Prop         | Type                                                                                |
+| ------------ | ----------------------------------------------------------------------------------- |
+| **`points`** | <code>[Point, <a href="#point">Point</a>, <a href="#point">Point</a>, Point]</code> |
 
 
 #### Point
@@ -194,17 +190,6 @@ Web Only
 | ------- | ------------------- |
 | **`x`** | <code>number</code> |
 | **`y`** | <code>number</code> |
-
-
-#### DSRect
-
-| Prop                         | Type                 |
-| ---------------------------- | -------------------- |
-| **`left`**                   | <code>number</code>  |
-| **`right`**                  | <code>number</code>  |
-| **`top`**                    | <code>number</code>  |
-| **`bottom`**                 | <code>number</code>  |
-| **`isMeasuredInPercentage`** | <code>boolean</code> |
 
 
 #### NormalizedImageResult

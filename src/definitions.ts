@@ -30,7 +30,7 @@ export interface DocumentNormalizerPlugin {
   /**
   * Web Only
   */
-  setEngineResourcesPath(options:{path:string}): Promise<void>; 
+  setEngineResourcePaths(options:{paths:any}): Promise<void>; 
 }
 
 export interface NormalizedImageResult {
