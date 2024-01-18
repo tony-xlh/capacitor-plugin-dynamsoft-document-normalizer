@@ -61,7 +61,8 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
   async detect(options: { source: string | HTMLImageElement | HTMLCanvasElement, template?:string}): Promise<{results:DetectedQuadResultItem[]}> {
     if (this.cvr) {
       let templateName = options.template ?? "DetectDocumentBoundaries_Default";
-      let result:CapturedResult = await this.cvr.capture(options.source,templateName);
+      this.cvr.maxCvsSideLength = 99999;
+      let result:CapturedResult = await this.cvr.capture(options.source,templateName,true);
       let results:DetectedQuadResultItem[] = [];
       for (let index = 0; index < result.items.length; index++) {
         const item = (result.items[index] as DetectedQuadResultItem);
@@ -94,7 +95,8 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
         settings.roiMeasuredInPercentage = false;
         await this.cvr.updateSettings(templateName, settings);
       }
-      let normalizedImagesResult:CapturedResult = await this.cvr.capture(options.source,templateName);
+      this.cvr.maxCvsSideLength = 99999;
+      let normalizedImagesResult:CapturedResult = await this.cvr.capture(options.source,templateName,true);
       let normalizedImageResultItem:NormalizedImageResultItem = (normalizedImagesResult.items[0] as NormalizedImageResultItem);
       let normalizedResult:NormalizedImageResult = {
         base64:this.removeDataURLHead(normalizedImageResultItem.toCanvas().toDataURL("image/jpeg"))
@@ -109,7 +111,8 @@ export class DocumentNormalizerWeb extends WebPlugin implements DocumentNormaliz
     if (this.cvr) {
       if (options.source) {
         let templateName = options.template ?? "DetectAndNormalizeDocument_Color";
-        let normalizedImagesResult:CapturedResult = await this.cvr.capture(options.source,templateName);
+        this.cvr.maxCvsSideLength = 99999;
+        let normalizedImagesResult:CapturedResult = await this.cvr.capture(options.source,templateName,true);
         let normalizedImageResultItem:NormalizedImageResultItem = (normalizedImagesResult.items[0] as NormalizedImageResultItem);
         let normalizedResult:NormalizedImageResult = {
           base64:this.removeDataURLHead(normalizedImageResultItem.toCanvas().toDataURL("image/jpeg"))
