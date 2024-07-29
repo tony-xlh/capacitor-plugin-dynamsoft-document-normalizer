@@ -10,6 +10,10 @@ For Capacitor v5, use versions >= 1.0.
 
 For Capacitor v4, use v0.x.
 
+| Product      | Android |    iOS | Web |
+| ----------- | ----------- | -----------  | -------  |
+| Dynamsoft Document Normalizer    | 2.x       | 2.x     | 2.x     |
+
 ## Supported Platforms
 
 * Web
