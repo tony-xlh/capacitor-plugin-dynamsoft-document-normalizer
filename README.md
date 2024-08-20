@@ -6,7 +6,9 @@ A document scanning plugin for Capacitor using [Dynamsoft Document Normalizer](h
 
 ## Versions
 
-For Capacitor v5, use versions >= 1.0.
+For Capacitor v6, use versions >= 3.0.
+
+For Capacitor v5, use versions 1.x and 2.x.
 
 For Capacitor v4, use v0.x.
 
