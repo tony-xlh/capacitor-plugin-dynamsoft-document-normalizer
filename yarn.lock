@@ -661,31 +661,31 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-dynamsoft-capture-vision-router@2.0.30:
-  version "2.0.30"
-  resolved "https://registry.npmmirror.com/dynamsoft-capture-vision-router/-/dynamsoft-capture-vision-router-2.0.30.tgz"
-  integrity sha512-1tOaVq732+rzLDQr1dYVKvjGpjVLlVpiP68FfaQ3GHJa4tQ08o+KbwA9dBxCYnZgSLXzersH/veaqoamcLN/UA==
+dynamsoft-capture-vision-router@2.4.22:
+  version "2.4.22"
+  resolved "https://registry.npmmirror.com/dynamsoft-capture-vision-router/-/dynamsoft-capture-vision-router-2.4.22.tgz"
+  integrity sha512-nz4mFp7FmPTKu2+4IVQLGQTx0cTeOYg8RF4O4EysMeZBvQuavNcyWMgoCGNMW7Pn7KPBnQnTq248HokUJp1S/A==
   dependencies:
-    dynamsoft-core "^3.0.30"
+    dynamsoft-core "^3.4.21"
 
-dynamsoft-core@^3.0.30, dynamsoft-core@3.0.30:
-  version "3.0.30"
-  resolved "https://registry.npmmirror.com/dynamsoft-core/-/dynamsoft-core-3.0.30.tgz"
-  integrity sha512-hWunmBV54S91W0ebOohji6MWwpHOX3g4i4HYAWAJTQ9K2yfRQa7622yTZdEb6Lfz5gYewObeVSs+bSI2XqZHJg==
+dynamsoft-core@^3.4.20, dynamsoft-core@^3.4.21, dynamsoft-core@3.4.21:
+  version "3.4.21"
+  resolved "https://registry.npmmirror.com/dynamsoft-core/-/dynamsoft-core-3.4.21.tgz"
+  integrity sha512-8ccgOdUbzPK7DYRafOnh6tQ1MEyn58OR7tMgqNPHQgJy4DTu3d0bR8xYxe1+BYNFgZJUmQqxnojn/UircBATiQ==
 
-dynamsoft-document-normalizer@2.0.20:
-  version "2.0.20"
-  resolved "https://registry.npmmirror.com/dynamsoft-document-normalizer/-/dynamsoft-document-normalizer-2.0.20.tgz"
-  integrity sha512-aVhstynCj8Ywu1QAANYJvc2K8MqtJZC6uRMwmOjlbEL5KrjNDqrQflazBtoe0Z/iGw5nG0zP5cJGdI4aV8AStQ==
+dynamsoft-document-normalizer@2.4.20:
+  version "2.4.20"
+  resolved "https://registry.npmmirror.com/dynamsoft-document-normalizer/-/dynamsoft-document-normalizer-2.4.20.tgz"
+  integrity sha512-gqBK1SWyuRgKjwHXWzBIWHRqhmaxcRJgCQagT0y/pvSzYf+8Dist2ft668m2GKDCTJghuWvaPLCDHTjOUUj13g==
   dependencies:
-    dynamsoft-core "^3.0.30"
+    dynamsoft-core "^3.4.20"
 
-dynamsoft-license@3.0.20:
-  version "3.0.20"
-  resolved "https://registry.npmmirror.com/dynamsoft-license/-/dynamsoft-license-3.0.20.tgz"
-  integrity sha512-zzJLg+NqpNtsA3PDsVdnEzLArxbXLRfJ4NE3isi56xMriD/CO39IwCv2QxWkfcZZ+mRe+JtpSelvczUT1qskjg==
+dynamsoft-license@3.4.21:
+  version "3.4.21"
+  resolved "https://registry.npmmirror.com/dynamsoft-license/-/dynamsoft-license-3.4.21.tgz"
+  integrity sha512-PqcdlG8eUDy3LzdX8t1uIzcsxs5d4Fmy+F8EMbwqVN7a7x06EKcxbxwtJb2hY+zCYDlLyrE2LLVl70EZzAxMDA==
   dependencies:
-    dynamsoft-core "^3.0.30"
+    dynamsoft-core "^3.4.20"
 
 emoji-regex@^8.0.0:
   version "8.0.0"

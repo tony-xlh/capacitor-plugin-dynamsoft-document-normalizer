@@ -190,6 +190,7 @@ Web Only
 | Prop         | Type                                                                                |
 | ------------ | ----------------------------------------------------------------------------------- |
 | **`points`** | <code>[Point, <a href="#point">Point</a>, <a href="#point">Point</a>, Point]</code> |
+| **`area`**   | <code>number</code>                                                                 |
 
 
 #### Point
