@@ -91,7 +91,7 @@ public class DocumentNormalizerPlugin extends Plugin {
                 if (path.equals("")) {
                     capturedResult = cvr.capture(Utils.base642Bitmap(source),templateName);
                 }else{
-                    capturedResult = cvr.capture(Utils.base642Bitmap(path),templateName);
+                    capturedResult = cvr.capture(path,templateName);
                 }
                 CapturedResultItem[] results = capturedResult.getItems();
                 if (results != null) {
