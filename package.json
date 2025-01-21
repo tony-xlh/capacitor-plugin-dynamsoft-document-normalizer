@@ -1,6 +1,6 @@
 {
   "name": "capacitor-plugin-dynamsoft-document-normalizer",
-  "version": "3.1.1",
+  "version": "3.2.1",
   "description": "A document scanning plugin for Capacitor using Dynamsoft Document Normalizer",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
