@@ -44,6 +44,7 @@ npx cap sync
 * [`detectAndNormalize(...)`](#detectandnormalize)
 * [`setEngineResourcePaths(...)`](#setengineresourcepaths)
 * [Interfaces](#interfaces)
+* [Enums](#enums)
 
 </docgen-index>
 
@@ -179,10 +180,11 @@ Web Only
 
 #### DetectedQuadResultItem
 
-| Prop                               | Type                                                    |
-| ---------------------------------- | ------------------------------------------------------- |
-| **`location`**                     | <code><a href="#quadrilateral">Quadrilateral</a></code> |
-| **`confidenceAsDocumentBoundary`** | <code>number</code>                                     |
+| Prop                               | Type                                                                                | Description                                                                                                       |
+| ---------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **`location`**                     | <code><a href="#quadrilateral">Quadrilateral</a></code>                             |                                                                                                                   |
+| **`confidenceAsDocumentBoundary`** | <code>number</code>                                                                 |                                                                                                                   |
+| **`CrossVerificationStatus`**      | <code><a href="#enumcrossverificationstatus">EnumCrossVerificationStatus</a></code> | Indicates whether the <a href="#detectedquadresultitem">DetectedQuadResultItem</a> has passed corss verification. |
 
 
 #### Quadrilateral
@@ -207,5 +209,17 @@ Web Only
 | ------------ | ------------------- |
 | **`base64`** | <code>string</code> |
 | **`path`**   | <code>string</code> |
+
+
+### Enums
+
+
+#### EnumCrossVerificationStatus
+
+| Members                | Value          | Description                                          |
+| ---------------------- | -------------- | ---------------------------------------------------- |
+| **`CVS_NOT_VERIFIED`** | <code>0</code> | The cross verification has not been performed yet.   |
+| **`CVS_PASSED`**       | <code>1</code> | The cross verification has been passed successfully. |
+| **`CVS_FAILED`**       | <code>2</code> | The cross verification has failed.                   |
 
 </docgen-api>
