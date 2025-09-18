@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DynamsoftDocumentNormalizer
+import DynamsoftCaptureVisionBundle
 
 class Utils {
     static public func convertBase64ToImage(_ imageStr:String) ->UIImage?{
@@ -42,7 +42,7 @@ class Utils {
         return finalStr
     }
     
-    static func convertPoints(_ points:[[String:NSNumber]]) -> [CGPoint] {
+    static func convertPoints2(_ points:[[String:NSNumber]]) -> [CGPoint] {
         var CGPoints:[CGPoint] = [];
         for point in points {
             let x = point["x"]!
@@ -53,6 +53,22 @@ class Utils {
             CGPoints.append(cgPoint)
         }
         return CGPoints
+    }
+    
+    static func convertPoints(_ points: [[String: NSNumber]]) -> [NSValue] {
+        var nsValues: [NSValue] = []
+        
+        for point in points {
+            let x = point["x"]!
+            let y = point["y"]!
+            let intX = x.intValue
+            let intY = y.intValue
+            let cgPoint = CGPoint(x: intX, y: intY)
+            let nsValue = NSValue(cgPoint: cgPoint)
+            nsValues.append(nsValue)
+        }
+        
+        return nsValues
     }
     
     static func wrapDetectionResult (result:DetectedQuadResultItem) -> [String: Any] {
