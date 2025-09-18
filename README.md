@@ -1,12 +1,12 @@
 # capacitor-plugin-dynamsoft-document-normalizer
 
-A document scanning plugin for Capacitor using [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/docs/).
+A document scanning plugin for Capacitor using [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/overview/).
 
 [Online demo](https://chic-syrniki-fac13f.netlify.app/)
 
 ## Versions
 
-For Capacitor v7, use versions 4.x.
+For Capacitor v7, use versions >= 4.x.
 
 For Capacitor v6, use versions 3.x.
 
@@ -18,7 +18,7 @@ For Capacitor v4, use v0.x.
 
 | Product      | Android |    iOS | Web |
 | ----------- | ----------- | -----------  | -------  |
-| Dynamsoft Document Normalizer    | 2.x       | 2.x     | 2.x     |
+| Dynamsoft Capture Vision    | 3.x       | 3.x     | 3.x     |
 
 ## Supported Platforms
 
