@@ -255,10 +255,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@rollup/rollup-win32-x64-msvc@4.34.9":
+"@rollup/rollup-darwin-arm64@4.34.9":
   version "4.34.9"
-  resolved "https://registry.npmmirror.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.34.9.tgz"
-  integrity sha512-AyleYRPU7+rgkMWbEh71fQlrzRfeP6SyMnRf9XX4fCdDPAJumdSBqYEcWPMzVQ4ScAl7E4oFfK0GUVn77xSwbw==
+  resolved "https://registry.npmmirror.com/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.34.9.tgz"
+  integrity sha512-0CY3/K54slrzLDjOA7TOjN1NuLKERBgk9nY5V34mhmuu673YNb+7ghaDUs6N0ujXR7fz5XaS5Aa6d2TNxZd0OQ==
 
 "@types/estree@1.0.6":
   version "1.0.6"
@@ -715,31 +715,10 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-dynamsoft-capture-vision-router@2.4.33:
-  version "2.4.33"
-  resolved "https://registry.npmmirror.com/dynamsoft-capture-vision-router/-/dynamsoft-capture-vision-router-2.4.33.tgz"
-  integrity sha512-ymnGu9u1OY7QNp+225MtoLf7HCVYEQF2BVnfGr5H1OCTIFyNHbiQA1hUIifN5THIhzSSWSDue7HpCGBPiZKmuA==
-  dependencies:
-    dynamsoft-core "^3.4.31"
-
-dynamsoft-core@^3.4.31, dynamsoft-core@3.4.31:
-  version "3.4.31"
-  resolved "https://registry.npmmirror.com/dynamsoft-core/-/dynamsoft-core-3.4.31.tgz"
-  integrity sha512-bgu1cDnYSCMVCc59wM8OpsNUdQg2tMezqAeRxHz+SCvSDs1RkMCZA2XlTU3pdtB0zo1xdLiza6l9uaKGrDf3UQ==
-
-dynamsoft-document-normalizer@2.6.11:
-  version "2.6.11"
-  resolved "https://registry.npmmirror.com/dynamsoft-document-normalizer/-/dynamsoft-document-normalizer-2.6.11.tgz"
-  integrity sha512-lFoP1aL6TI0/cSTFRiIcr2AsBse9fYkaHRpd2342HVlwFKpKlzl1MzjlhH6te/VFMoxb6x2rn7SCEvreS0OvaA==
-  dependencies:
-    dynamsoft-core "^3.4.31"
-
-dynamsoft-license@3.4.31:
-  version "3.4.31"
-  resolved "https://registry.npmmirror.com/dynamsoft-license/-/dynamsoft-license-3.4.31.tgz"
-  integrity sha512-qsli2c9ELXBxITudehiyUTdO9TY9TjGMkoEMf3iShpSb/NwNlOf0EPYIErTuvTG0/RshwVnNbFVstckNvS5l6g==
-  dependencies:
-    dynamsoft-core "^3.4.31"
+dynamsoft-capture-vision-bundle@3.0.6001:
+  version "3.0.6001"
+  resolved "https://registry.npmmirror.com/dynamsoft-capture-vision-bundle/-/dynamsoft-capture-vision-bundle-3.0.6001.tgz"
+  integrity sha512-UZnhaiiLY1ZU/40LCVUfyDMN5nBqZXQOjzCpWjaqwt+WlkZBx6kO1uTtDlc5XMLM3bKXUFxNCsz7asv5dDjfTw==
 
 eastasianwidth@^0.2.0:
   version "0.2.0"
@@ -1119,6 +1098,11 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmmirror.com/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
+
+fsevents@~2.3.2:
+  version "2.3.3"
+  resolved "https://registry.npmmirror.com/fsevents/-/fsevents-2.3.3.tgz"
+  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.2:
   version "1.1.2"
