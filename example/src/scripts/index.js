@@ -26,16 +26,15 @@ let startBtn = document.getElementById("startBtn");
 let okayBtn = document.getElementById("okayBtn");
 let retakeBtn = document.getElementById("retakeBtn");
 let toggleTorchBtn = document.getElementById("toggleTorchButton");
-let normalizationTemplate = "NormalizeDocument_Binary";
-let detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Binary";
+let normalizationTemplate = "NormalizeDocument_Default";
+let detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Default";
 startBtn.addEventListener("click",startCamera);
 okayBtn.addEventListener("click",okay);
 retakeBtn.addEventListener("click",retake);
 toggleTorchBtn.addEventListener("click",toggleTorch);
 document.getElementById("closeButton").addEventListener("click",exitScanner);
 document.getElementById("saveButton").addEventListener("click",saveAsPDF);
-document.getElementById("colorModeSelect").selectedIndex = 0;
-document.getElementById("colorModeSelect").addEventListener("change",onColorModeChange);
+
 
 initialize();
 
@@ -420,27 +419,6 @@ async function normalizeImage() {
     normalizationResult = "data:image/jpeg;base64," + normalizationResult;
   }
   document.getElementById("normalizedImage").src = normalizationResult;
-}
-
-function onColorModeChange() {
-  let selectedIndex = document.getElementById("colorModeSelect").selectedIndex;
-  console.log(selectedIndex);
-  if (selectedIndex === 0) {
-    normalizationTemplate = "NormalizeDocument_Binary";
-    detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Binary";
-  }else if (selectedIndex === 1) {
-    normalizationTemplate = "NormalizeDocument_Gray";
-    detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Gray";
-  }else {
-    normalizationTemplate = "NormalizeDocument_Color";
-    detectAndNormalizationTemplate = "DetectAndNormalizeDocument_Color";
-  }
-  console.log("update settings done");
-  if (document.getElementById("hires").checked) {
-    detectAndNormalize();
-  }else{
-    normalizeImage();
-  }
 }
 
 async function saveAsPDF(){

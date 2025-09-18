@@ -184,25 +184,37 @@ Web Only
 
 | Prop                               | Type                                                                                | Description                                                                                                       |
 | ---------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **`location`**                     | <code><a href="#quadrilateral">Quadrilateral</a></code>                             |                                                                                                                   |
-| **`confidenceAsDocumentBoundary`** | <code>number</code>                                                                 |                                                                                                                   |
+| **`location`**                     | <code><a href="#quadrilateral">Quadrilateral</a></code>                             | The location of the detected quadrilateral within the original image, represented as a quadrilateral shape.       |
+| **`confidenceAsDocumentBoundary`** | <code>number</code>                                                                 | A confidence score related to the detected quadrilateral's accuracy as a document boundary.                       |
 | **`CrossVerificationStatus`**      | <code><a href="#enumcrossverificationstatus">EnumCrossVerificationStatus</a></code> | Indicates whether the <a href="#detectedquadresultitem">DetectedQuadResultItem</a> has passed corss verification. |
 
 
 #### Quadrilateral
 
-| Prop         | Type                                                                                |
-| ------------ | ----------------------------------------------------------------------------------- |
-| **`points`** | <code>[Point, <a href="#point">Point</a>, <a href="#point">Point</a>, Point]</code> |
-| **`area`**   | <code>number</code>                                                                 |
+| Prop               | Type                                                                                | Description                                                                                          |
+| ------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| **`points`**       | <code>[Point, <a href="#point">Point</a>, <a href="#point">Point</a>, Point]</code> | An array of four <a href="#point">`Point`</a> objects defining the vertices of the quadrilateral.    |
+| **`boundingRect`** | <code><a href="#dsrect">DSRect</a></code>                                           | The bounding rectangle of the quadrilateral, represented by a <a href="#dsrect">`DSRect`</a> object. |
+| **`area`**         | <code>number</code>                                                                 | The area of the quadrilateral.                                                                       |
 
 
 #### Point
 
-| Prop    | Type                |
-| ------- | ------------------- |
-| **`x`** | <code>number</code> |
-| **`y`** | <code>number</code> |
+| Prop    | Type                | Description                    |
+| ------- | ------------------- | ------------------------------ |
+| **`x`** | <code>number</code> | The x-coordinate of the point. |
+| **`y`** | <code>number</code> | The y-coordinate of the point. |
+
+
+#### DSRect
+
+| Prop                         | Type                 | Description                                                   |
+| ---------------------------- | -------------------- | ------------------------------------------------------------- |
+| **`left`**                   | <code>number</code>  | The left coordinate of the rectangle.                         |
+| **`right`**                  | <code>number</code>  | The right coordinate of the rectangle.                        |
+| **`top`**                    | <code>number</code>  | The top coordinate of the rectangle.                          |
+| **`bottom`**                 | <code>number</code>  | The bottom coordinate of the rectangle.                       |
+| **`isMeasuredInPercentage`** | <code>boolean</code> | Indicates if the rectangle's measurements are in percentages. |
 
 
 #### NormalizedImageResult

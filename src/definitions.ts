@@ -1,5 +1,4 @@
-import { Quadrilateral } from "dynamsoft-core";
-import { DetectedQuadResultItem } from "dynamsoft-document-normalizer";
+import type { Quadrilateral, DetectedQuadResultItem } from "dynamsoft-capture-vision-bundle";
 
 export interface DocumentNormalizerPlugin {
   initialize(): Promise<void>;

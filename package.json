@@ -85,9 +85,6 @@
     }
   },
   "dependencies": {
-    "dynamsoft-capture-vision-router": "2.4.33",
-    "dynamsoft-core": "3.4.31",
-    "dynamsoft-license": "3.4.31",
-    "dynamsoft-document-normalizer": "2.6.11"
+    "dynamsoft-capture-vision-bundle": "3.0.6001"
   }
 }
